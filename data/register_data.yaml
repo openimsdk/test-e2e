@@ -1,0 +1,16 @@
+register_tests:
+
+- description: "注册成功"
+  generate_phone: true
+  verification_code: "666666"
+  expected: "注册成功"
+
+- description: "注册失败"
+  username: "15711112222"
+  expected: "手机号已注册"
+
+- description: "注册失败,验证码错误"
+  generate_phone: true
+  verification_code: "123456"
+  expected: "验证码错误"
+
