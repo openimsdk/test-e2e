@@ -19,7 +19,8 @@ from selenium.webdriver.common.by import By
 # from data.login_data import LOGIN_DATA
 from pages.login_page import LoginPage
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 
 
@@ -40,7 +41,18 @@ print('测数据',test_data)
 #fixure写法更推荐
 @pytest.fixture
 def driver():
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # 指定无头模式
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--v=1")
+
+    # 确保将'/path/to/chromedriver'替换为你的chromedriver实际路径
+    driver_path = os.path.join(os.environ['HOME'], 'bin', 'chromedriver')  # 假设你已将chromedriver放在了$HOME/bin
+    service = Service(executable_path=driver_path)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    
     driver.implicitly_wait(10)
     yield  driver
     time.sleep(5)

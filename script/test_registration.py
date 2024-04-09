@@ -18,6 +18,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from pages.registration_page import RegisterPage
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 
 #随机注册成功的手机号码
@@ -38,7 +40,18 @@ print('测数据',test_data)
 #fixure写法更推荐
 @pytest.fixture
 def driver():
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # 开启无头模式
+    chrome_options.add_argument("--no-sandbox")  # 绕过OS安全模型
+    chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--v=1")
+    chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
+
+
+    driver_path = os.path.join(os.environ['HOME'], 'bin', 'chromedriver')  # 假定你已经将chromedriver放在了$HOME/bin目录下
+    service = Service(executable_path = driver_path)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
     driver.implicitly_wait(10)
     yield  driver
     # time.sleep(5)
