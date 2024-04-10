@@ -50,20 +50,20 @@ In environments without a graphical user interface, like Git's testing environme
 #### 2. Install ChromeDriver
    - Ensure the ChromeDriver version matches the installed Chrome version.
    - Download ChromeDriver:
-     ```
+     ```bash
      wget https://storage.googleapis.com/chrome-for-testing-public/version/linux64/chromedriver-linux64.zip
      ```
    - Extract and move ChromeDriver to `$HOME/bin` (Create the directory if it doesn't exist):
-     ```
-     unzip chromedriver_linux64.zip -d $HOME/bin
+     ```bash
+     unzip chromedriver-linux64.zip -d $HOME/bin
      mv $HOME/bin/chromedriver-linux64/chromedriver $HOME/bin
      ```
    - Make ChromeDriver executable:
-     ```
+     ```bash
      chmod +x $HOME/bin/chromedriver
      ```
    - Verify that ChromeDriver is executable:
-     ```
+     ```bash
      $HOME/bin/chromedriver --version
      ```
 
@@ -82,6 +82,31 @@ In environments without a graphical user interface, like Git's testing environme
      ```
      chromedriver --version
      ```
+
+#### 4. Install OpenIM Server Test
+
+Clone openim-server, use docker install:
+```bash
+git clone https://github.com/openimsdk/openim-docker
+cd openim-docker
+```
+
+init config:
+```
+make init
+```
+
+start docker:
+```
+docker compose up -d
+```
+
+start test-e2e:
+```
+cd ..
+cd test-e2e
+pytest main.py
+```
 
 ### Using the Headless Browser in Code
 When initiating the `driver()` function in your code, include the following options to enable headless mode and avoid common issues:
