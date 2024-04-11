@@ -84,6 +84,13 @@ In environments without a graphical user interface, like Git's testing environme
      chromedriver --version
      ```
 
+#### 5. Install selenium
+
+   - pip install selenium is required：
+     ```
+     pip install selenium
+     ```
+
 #### 4. Install OpenIM Server Test
 
 Clone openim-server, use docker install:
