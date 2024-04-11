@@ -55,6 +55,7 @@ In environments without a graphical user interface, like Git's testing environme
      ```
    - Extract and move ChromeDriver to `$HOME/bin` (Create the directory if it doesn't exist):
      ```bash
+     mkdir -p $HOME/bin
      unzip chromedriver-linux64.zip -d $HOME/bin
      mv $HOME/bin/chromedriver-linux64/chromedriver $HOME/bin
      ```
