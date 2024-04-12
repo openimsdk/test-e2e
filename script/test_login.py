@@ -1,7 +1,7 @@
 import os
 import sys
 
-from config import DIR_PATH
+from config import DIR_PATH, HOST
 
 sys.path.append('C:\\Users\\Jane\\PycharmProjects\\auto\\test1')
 
@@ -74,7 +74,7 @@ def test_logins(driver,case):
     if case['expected'] == '登入成功':
         try:
           #检查是否跳转到了预期的URL
-            expected_url = "http://43.128.72.19:11001/#/chat"
+            expected_url = "{}#/chat".format(HOST)
             WebDriverWait(driver,10).until(EC.url_to_be(expected_url))
         except TimeoutException:
             assert  False,f"登录成功后未跳转到预期的URL，当前URL: {driver.current_url}"

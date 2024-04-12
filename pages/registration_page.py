@@ -38,7 +38,7 @@ class RegisterPage(BasePage):
 
 
     def register(self,phoneNumber,invitation_code=None,nickname='',password='',password2='' ,verification_code='666666'  ):
-        expected_url = "http://43.128.72.19:11001/#/chat"
+        expected_url = "{}#/chat".format(HOST)
         """填写注册信息并提交，验证码环节模拟"""
         """填写注册信息并提交，根据情况可能跳过验证码输入"""
         self.enter_text(self.user_count,phoneNumber)
