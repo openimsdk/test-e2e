@@ -24,7 +24,7 @@ class RegisterPage(BasePage):
     nickname_loc = (By.XPATH, '//*[@id="nickname"]')
     password_loc = (By.XPATH, '//*[@id="password"]')
     password2_loc = (By.XPATH, '//*[@id="password2"]')
-    confirm_loc = (By.CSS_SELECTOR,'button.ant-btn.ant-btn-primary.ant-btn-block')
+    confirm_loc = (By.CSS_SELECTOR, 'button.ant-btn.ant-btn-primary.ant-btn-block')
 
     def __init__(self,driver):
         super().__init__(driver)

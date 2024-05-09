@@ -1,23 +1,9 @@
-# openim-e2eTest
+  # openim-e2eTest
 This repository contains the end-to-end (e2e) automation tests for the OpenIM project. Below you'll find the steps to run the entire test suite or individual test cases, as well as the setup required for running tests in environments without a graphical user interface, such as a Git testing environment, by using a headless browser.
 
-## Running Tests
 
-### Run the Entire Test Suite
-To run all test cases in the suite:
-1. Open your Git testing environment.
-2. Execute the following command:
-   ```
-   pytest main.py
-   ```
 
-### Run a Single Test Case
-To run an individual test case:
-1. Open your Git testing environment.
-2. Execute the command below, replacing `test_single_test_file` with the name of your test file:
-   ```
-   pytest script/test_single_test_file
-   ```
+
 
 ## Setting Up a Headless Browser
 In environments without a graphical user interface, like Git's testing environment, it's possible to run the entire test project using a headless browser. Here's how to set it up:
@@ -68,6 +54,7 @@ In environments without a graphical user interface, like Git's testing environme
      $HOME/bin/chromedriver --version
      ```
 
+
 #### 3. Configure the Environment Variable
    - Add ChromeDriver to your PATH:
      ```
@@ -90,6 +77,28 @@ In environments without a graphical user interface, like Git's testing environme
      ```
      pip install selenium
      ```
+ - pip install pytest is required：
+     ```
+     pip install pytest
+     ```
+  
+## Running Tests
+
+### Run the Entire Test Suite
+To run all test cases in the suite:
+1. Open your Git testing environment.
+2. Execute the following command:
+   ```
+   pytest main.py
+   ```
+
+### IF Run a Single Test Case
+To run an individual test case:
+1. Open your Git testing environment.
+2. Execute the command below, replacing `test_single_test_file` with the name of your test file:
+   ```
+   pytest script/test_single_test_file
+   ```
 
 #### 4. Install OpenIM Server Test
 
