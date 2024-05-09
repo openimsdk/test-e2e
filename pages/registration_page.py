@@ -21,10 +21,10 @@ class RegisterPage(BasePage):
     verification_code_input_loc = (
         By.CSS_SELECTOR, 'div.flex.flex-row.items-center.justify-center > input[type="text"][maxlength]'
     )
-    nickname_loc = (By.XPATH,'//*[@id="nickname"]')
-    password_loc = (By.XPATH,'//*[@id="password"]')
-    password2_loc = (By.XPATH,'//*[@id="password2"]')
-    confirm_loc = (By.XPATH,'//*[@id="root"]/div/div/div[2]/div[2]/div/form/div[7]/div/div/div/div/button')
+    nickname_loc = (By.XPATH, '//*[@id="nickname"]')
+    password_loc = (By.XPATH, '//*[@id="password"]')
+    password2_loc = (By.XPATH, '//*[@id="password2"]')
+    confirm_loc = (By.CSS_SELECTOR, 'button.ant-btn.ant-btn-primary.ant-btn-block')
 
     def __init__(self,driver):
         super().__init__(driver)

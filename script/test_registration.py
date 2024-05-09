@@ -4,7 +4,7 @@ import sys
 
 from config import DIR_PATH
 
-sys.path.append('C:\\Users\\Jane\\PycharmProjects\\auto\\test1')
+
 
 import logging
 import time
@@ -51,7 +51,7 @@ def driver():
     driver_path = os.path.join(os.environ['HOME'], 'bin', 'chromedriver')  # 假定你已经将chromedriver放在了$HOME/bin目录下
     service = Service(executable_path = driver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
+    # driver = webdriver.Chrome()  #本地
     driver.implicitly_wait(10)
     yield  driver
     # time.sleep(5)
@@ -77,9 +77,9 @@ def test_register(driver,case):
 
     invitation_code = case.get('invitation_code','')
     verification_code = case.get('verification_code', '666666')  # 如果没有指定，默认为 '666666'
-    nickname = case.get('nickname ','TestNick')
-    password = case.get('password ','111111a')
-    password2 = case.get('password2 ','111111a')
+    nickname = case.get('nickname ', 'TestNick')
+    password = case.get('password ', '111111a')
+    password2 = case.get('password2 ', '111111a')
 
     result = register_page.register(phoneNumber,invitation_code,nickname,password,password2,verification_code)
 

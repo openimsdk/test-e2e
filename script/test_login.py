@@ -3,7 +3,7 @@ import sys
 
 from config import DIR_PATH, HOST
 
-sys.path.append('C:\\Users\\Jane\\PycharmProjects\\auto\\test1')
+
 
 #登录测试脚本 (scripts/test_login.py)
 import time
