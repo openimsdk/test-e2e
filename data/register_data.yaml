@@ -5,6 +5,11 @@ register_tests:
   verification_code: "666666"
   expected: "注册成功"
 
+- description: "注册成功"
+  generate_phone: True
+  verification_code: "666666"
+  expected: "注册成功"
+
 - description: "注册失败"
   generate_phone: False
   expected: "手机号已注册"

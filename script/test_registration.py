@@ -42,7 +42,7 @@ def read_first_registered_account():
         account_pwd = accounts[0]
         has_phone, pwd = account_pwd
 
-        return has_phone  # 返回列表中的第一个账号元组
+        return has_phone
     else:
         assert False, "There are no available registered accounts for registered testing."
 
@@ -77,7 +77,7 @@ def test_register(driver,case):
     register_page.go_to()
     register_page.navigate_to_register()
 
-    #Dynamically generate phone numbers based on test cases.
+    # Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone', False):
         phoneNumber = generate_phone_number()
         print("随机号码注册成功：",phoneNumber)
