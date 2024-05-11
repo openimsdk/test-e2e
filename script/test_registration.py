@@ -70,7 +70,7 @@ def test_register(driver,case):
     else:
         phoneNumber = case.get('username',generate_phone_number())# If not provided, generate one anyway.
 
-    # Get values for other fields from the test data.
+    # Get  values for other fields from the test data.
 
     invitation_code = case.get('invitation_code','')
     verification_code = case.get('verification_code', '666666')
