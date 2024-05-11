@@ -22,16 +22,30 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+from utils.read_accounts import read_registered_accounts
+
+
 #"A randomly generated successful registration phone number."
 def generate_phone_number():
     """"Generate a unique phone number based on a timestamp."""
     tail = random.randint(10000000, 99999999)
     return "157" + str(tail)
+
 def load_yaml_data(filepath):
     abs_file_path = os.path.join(DIR_PATH, filepath)
     with open(abs_file_path, 'r', encoding='utf-8') as file:
         data = yaml.safe_load(file)
         return data['register_tests']  #Modify this part to match the new YAML structure.
+def read_first_registered_account():
+    accounts = read_registered_accounts()
+    if accounts:
+        account_pwd = accounts[0]
+        has_phone, pwd = account_pwd
+        print('检测已存在号码：', has_phone, pwd)
+        return has_phone  # 返回列表中的第一个账号元组
+    else:
+        assert False, "There are no available registered accounts for registered testing."
+
 
 # "Load test data from the YAML file."
 test_data = load_yaml_data("data/register_data.yaml")
@@ -40,15 +54,15 @@ print('test data',test_data)
 
 @pytest.fixture
 def driver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--enable-logging")
-    chrome_options.add_argument("--v=1")
-    chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # chrome_options = Options()
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--enable-logging")
+    # chrome_options.add_argument("--v=1")
+    # chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-    # driver = webdriver.Chrome()
+    driver = webdriver.Chrome()
     driver.implicitly_wait(10)
     yield  driver
     # time.sleep(5)
@@ -65,10 +79,11 @@ def test_register(driver,case):
     register_page.navigate_to_register()
 
     #Dynamically generate phone numbers based on test cases.
-    if case.get('generate_phone',False):
+    if case.get('generate_phone', False):
         phoneNumber = generate_phone_number()
+        print("再次检测",phoneNumber)
     else:
-        phoneNumber = case.get('username',generate_phone_number())# If not provided, generate one anyway.
+        phoneNumber = case.get('username',read_first_registered_account())# If not provided, generate one anyway.
 
     # Get  values for other fields from the test data.
 
