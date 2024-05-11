@@ -11,14 +11,14 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
 def get_headless_chrome_driver():
-    # chrome_options = Options()
-    # chrome_options.add_argument("--headless") # Enable headless mode
-    # chrome_options.add_argument("--no-sandbox") # Bypassing the operating system security model
-    # chrome_options.add_argument("--enable-logging")
-    # chrome_options.add_argument("--v=1")
-    # chrome_options.add_argument("--disable-dev-shm-usage") # Avoid sharing memory
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    driver = webdriver.Chrome()  # Locally
+    chrome_options = Options()
+    chrome_options.add_argument("--headless") # Enable headless mode
+    chrome_options.add_argument("--no-sandbox") # Bypassing the operating system security model
+    chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--v=1")
+    chrome_options.add_argument("--disable-dev-shm-usage") # Avoid sharing memory
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # driver = webdriver.Chrome()  # Locally
     driver.implicitly_wait(10)
     return driver
 
@@ -31,11 +31,10 @@ class TestRegistration:
         # Code to execute after the test is completed.
         driver.quit()
 
-    # @pytest.mark.parametrize("case", test_registration.test_data)
-    # def test_registration(self, driver, case):
-    #     test_registration.test_register(driver, case)
-    def test_registration(self, driver):
-        test_registration.test_register(driver)
+    @pytest.mark.parametrize("case", test_registration.test_data)
+    def test_registration(self, driver, case):
+        test_registration.test_register(driver, case)
+
 
 class TestLogin:
     @pytest.fixture

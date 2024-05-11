@@ -54,14 +54,14 @@ test_data = load_yaml_data("data/register_data.yaml")
 
 @pytest.fixture
 def driver():
-    # chrome_options = Options()
-    # chrome_options.add_argument("--headless")
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--enable-logging")
-    # chrome_options.add_argument("--v=1")
-    # chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--v=1")
+    chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # driver = webdriver.Chrome()
     driver.implicitly_wait(10)
     yield  driver
     # time.sleep(5)
