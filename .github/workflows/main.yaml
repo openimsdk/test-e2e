@@ -1,24 +1,17 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone OpenIM Server
-        run: |
-          git clone https://github.com/openimsdk/openim-docker
-          cd openim-docker
-          export OPENIM_IP=$(curl ifconfig.me)
-          export LOG_STORAGE_LOCATION="../logs/"
-          make init
-          docker compose up -d
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: main-repo
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
@@ -27,14 +20,24 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          cd ${{ github.workspace }}/main-repo
+          pip install PyYAML webdriver_manager selenium pytest
+      
+      - name: Checkout compose repository
+        uses: actions/checkout@v4
+        with:
+          repository: "openimsdk/openim-docker"
+          path: "compose-repo"
+  
+      - name: Start services using Docker Compose
+        run: |
+          cd ${{ github.workspace }}/compose-repo
+          docker compose up -d
+          sleep 60
 
       - name: Run tests
-        run: pytest main.py
+        run: |
+          cd ${{ github.workspace }}/main-repo
+          pytest main.py
 
-      - name: Build Docker Image
-        run: docker build . -t my-test-image
-
-      - name: Run Docker Container
-        run: docker run my-test-image
+      
