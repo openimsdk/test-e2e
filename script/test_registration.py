@@ -49,7 +49,7 @@ def read_first_registered_account():
 
 # "Load test data from the YAML file."
 test_data = load_yaml_data("data/register_data.yaml")
-print('test data',test_data)
+# print('test data',test_data)
 
 
 @pytest.fixture
@@ -61,7 +61,6 @@ def driver():
     # chrome_options.add_argument("--v=1")
     # chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-
     driver = webdriver.Chrome()
     driver.implicitly_wait(10)
     yield  driver
@@ -81,7 +80,6 @@ def test_register(driver,case):
     #Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone', False):
         phoneNumber = generate_phone_number()
-        print("再次检测",phoneNumber)
     else:
         phoneNumber = case.get('username',read_first_registered_account())# If not provided, generate one anyway.
 
