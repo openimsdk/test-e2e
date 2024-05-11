@@ -41,7 +41,7 @@ def read_first_registered_account():
     if accounts:
         account_pwd = accounts[0]
         has_phone, pwd = account_pwd
-        print('检测已存在号码：', has_phone, pwd)
+
         return has_phone  # 返回列表中的第一个账号元组
     else:
         assert False, "There are no available registered accounts for registered testing."
