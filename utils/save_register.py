@@ -1,18 +1,36 @@
 import csv
 import os.path
-import datetime
-from datetime import datetime
+from datetime import datetime,timedelta
+
+from config import DIR_PATH
+
+
 def save_registered_account(phoneNumber,password,dir_path='accounts'):
     """
-       保存注册成功的账号信息到CSV文件中。
+       Save the successfully registered account information to a CSV file.
        """
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-    # 定义文件名，包含日期，便于区分
+
+    target_dir = os.path.join(DIR_PATH,dir_path)
+
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+
     filename = f"registered_accounts_{datetime.today().strftime('%Y%m%d')}.csv"
     fieldnames = ["phone_number", "password"]
-    file_path = os.path.join(dir_path, filename)
-    # 检查文件是否已存在，如果不存在，则先写入标题行
+    file_path = os.path.join(target_dir, filename)
+
+    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y%m%d')
+    old_file = os.path.join(target_dir,f"registered_accounts_{yesterday}.csv")
+
+
+
+    try:
+        os.remove(old_file)
+        print(f'delete file：{old_file}')
+    except FileNotFoundError:
+        pass
+
+
     file_exists = os.path.exists(file_path)
 
     with open(file_path, mode='a', newline='', encoding='utf-8') as file:
@@ -22,6 +40,7 @@ def save_registered_account(phoneNumber,password,dir_path='accounts'):
             writer.writeheader()
         writer.writerow({"phone_number": phoneNumber, "password": password})
 
-    print(f"账号 {phoneNumber} 已经成功创建")
+    print(f"account {phoneNumber} Account creation successful")
 
-
+if __name__ == '__main__':
+    print('test',save_registered_account(15755555555,111111))
