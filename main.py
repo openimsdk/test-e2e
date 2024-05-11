@@ -1,25 +1,24 @@
-# 创建自定义测试套件
+# Create a custom test suite
 import pytest
 from selenium import webdriver
 import os
 from script import test_registration
 from script import test_login
+
+
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 def get_headless_chrome_driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless") # 开启无头模式
-    chrome_options.add_argument("--no-sandbox") # 绕过操作系统安全模型
+    chrome_options.add_argument("--headless") # Enable headless mode
+    chrome_options.add_argument("--no-sandbox") # Bypassing the operating system security model
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--v=1")
-    chrome_options.add_argument("--disable-dev-shm-usage") # 避免共享内存
-
-    # 如果你已经将 chromedriver 的路径添加到了系统的 PATH 环境变量中，以下行可选
-    driver_path = os.path.join(os.environ['HOME'], 'bin', 'chromedriver')  # 假定你已经将chromedriver放在了$HOME/bin目录下
-    service = Service(executable_path = driver_path)
-      # 现在使用 Service 对象和 options 实例化 WebDriver
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    chrome_options.add_argument("--disable-dev-shm-usage") # Avoid sharing memory
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # driver = webdriver.Chrome()  # Locally
     driver.implicitly_wait(10)
     return driver
 
@@ -29,7 +28,7 @@ class TestRegistration:
         driver = get_headless_chrome_driver()
         driver.implicitly_wait(10)
         yield driver
-        # 测试完成后执行的代码
+        # Code to execute after the test is completed.
         driver.quit()
 
     @pytest.mark.parametrize("case", test_registration.test_data)
@@ -42,20 +41,25 @@ class TestLogin:
         driver = get_headless_chrome_driver()
         driver.implicitly_wait(10)
         yield driver
-        # 测试完成后执行的代码
         driver.quit()
 
-    @pytest.mark.parametrize("case", test_login.test_data)
-    def test_login(self, driver, case):
-        test_login.test_logins(driver, case)
+    def test_login(self,driver):
+        # Call the test_logins method
+        test_login.test_loginss(driver)
+
+
+
+
 def custom_test_suite():
-    '''创建一个空的测试套件'''
+    # Create an empty test suite
     suite = pytest.TestSuite()
     suite.addTest(TestRegistration())
     suite.addTest(TestLogin())
     return suite
 
-# 运行测试套件
+# Run the test suite
 if __name__ == '__main__':
     runner = pytest.TextTestRunner()
     runner.run(custom_test_suite())
+
+

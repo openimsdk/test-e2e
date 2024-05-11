@@ -33,53 +33,11 @@ In environments without a graphical user interface, like Git's testing environme
         sudo apt-get install -y google-chrome-stable
         ```
 
-#### 2. Install ChromeDriver
-   - Ensure the ChromeDriver version matches the installed Chrome version.
-   - Download ChromeDriver:
-     ```bash
-     wget https://storage.googleapis.com/chrome-for-testing-public/version/linux64/chromedriver-linux64.zip
-     ```
-   - Extract and move ChromeDriver to `$HOME/bin` (Create the directory if it doesn't exist):
-     ```bash
-     mkdir -p $HOME/bin
-     unzip chromedriver-linux64.zip -d $HOME/bin
-     mv $HOME/bin/chromedriver-linux64/chromedriver $HOME/bin
-     ```
-   - Make ChromeDriver executable:
-     ```bash
-     chmod +x $HOME/bin/chromedriver
-     ```
-   - Verify that ChromeDriver is executable:
-     ```bash
-     $HOME/bin/chromedriver --version
-     ```
+#### 2. Run requirements.txt to install the environment 
 
-
-#### 3. Configure the Environment Variable
-   - Add ChromeDriver to your PATH:
+   - pip install environment is required：
      ```
-     export PATH="$HOME/bin:$PATH"
-     ```
-   - Make the environment variable changes take effect:
-     ```
-     source ~/.bashrc
-     ```
-
-#### 4. Verify Installation
-   - Check ChromeDriver version to ensure it's correctly installed:
-     ```
-     chromedriver --version
-     ```
-
-#### 5. Install selenium
-
-   - pip install selenium is required：
-     ```
-     pip install selenium
-     ```
- - pip install pytest is required：
-     ```
-     pip install pytest
+     pip install -r requirements.txt
      ```
   
 ## Running Tests

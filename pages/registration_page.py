@@ -12,12 +12,12 @@ from utils.save_register import save_registered_account
 
 
 class RegisterPage(BasePage):
-    # 立即注册链接的XPath
+
     register_link_loc = (By.XPATH,'//*[@id="root"]/div/div/div[2]/div[2]/form/div[5]/span[2]')
     user_count =(By.ID,'phoneNumber')
-    code = (By.ID,'invitationCode') #邀请码可以为空
+    code = (By.ID,'invitationCode')  # The invitation code can be left empty.
     register_button = (By.XPATH,'//*[@id="root"]/div/div/div[2]/div[2]/div/form/div[4]/div/div/div/div/button')
-     # 假设的验证码输入框定位
+    # The assumed location of the captcha input box.
     verification_code_input_loc = (
         By.CSS_SELECTOR, 'div.flex.flex-row.items-center.justify-center > input[type="text"][maxlength]'
     )
@@ -32,15 +32,15 @@ class RegisterPage(BasePage):
     def go_to(self):
         self.driver.get(self.url)
 
-    """从登录页面导航到注册页面"""
+    """Navigate from the login page to the registration page."""
     def navigate_to_register(self):
         self.base_click(self.register_link_loc)
 
 
     def register(self,phoneNumber,invitation_code=None,nickname='',password='',password2='' ,verification_code='666666'  ):
         expected_url = "{}#/chat".format(HOST)
-        """填写注册信息并提交，验证码环节模拟"""
-        """填写注册信息并提交，根据情况可能跳过验证码输入"""
+        """Fill out the registration information and submit, simulate the verification code step"""
+        """Fill out the registration information and submit, skipping the verification code input depending on the situation."""
         self.enter_text(self.user_count,phoneNumber)
         if invitation_code:
             self.enter_text(self.code,invitation_code)
@@ -57,11 +57,11 @@ class RegisterPage(BasePage):
                 return "手机号已注册"
 
         except TimeoutException:
-            # 没有找到错误消息，继续尝试填写验证码
+            # No error message found, continue trying to fill in the captcha.
             pass
 
         try:
-            # 等待验证码输入框出现，并填写验证码
+            # Wait for the verification code input box to appear and fill in the verification code.
             verification_code_locator = (
             By.CSS_SELECTOR, 'div.flex.flex-row.items-center.justify-center > input[type="text"][maxlength]')
             verification_code_elements = self.wait.until(
@@ -70,7 +70,7 @@ class RegisterPage(BasePage):
                 element.send_keys(verification_code[index])
         except TimeoutException:
             return "验证码输入框未出现"
-         # 检查是否出现“验证码错误”的错误消息
+         # Check if the error message "Incorrect verification code" appears.
         try:
             error_message_locator = (By.XPATH, '/html/body/div[2]/div/div/div/div/span[2]')
             error_message_element = self.wait.until(EC.visibility_of_element_located(error_message_locator))
@@ -80,19 +80,19 @@ class RegisterPage(BasePage):
         except TimeoutException:
             pass
 
-            # 填写昵称、密码和确认密码
+            # Unable to find error message, continue trying to fill in the verification code.
             self.enter_text(self.nickname_loc,nickname)
             self.enter_text(self.password_loc, password)
             self.enter_text(self.password2_loc, password2)
 
             self.base_click(self.confirm_loc)
 
-            # 检查是否跳转到了预期的URL
+            # Check if the URL has been redirected to the expected one.
             try:
                 WebDriverWait(self.driver, 10).until(EC.url_to_be(expected_url))
                 save_registered_account(phoneNumber, password)
                 return "注册成功"
 
             except  TimeoutException:
-                return f"期待跳转到 {expected_url}，但未能跳转。当前URL: {self.driver.current_url}"
+                return f"Expecting redirection to. {expected_url}，But failed to redirect. Current URL: {self.driver.current_url}"
 

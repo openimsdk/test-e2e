@@ -6,7 +6,7 @@ from config import HOST
 from selenium import webdriver
 
 class LoginPage(BasePage):
-    # 下面是loc
+    # loc
     user_count = (By.ID, 'phoneNumber')
     pwd = (By.ID, 'password')
     login_button = (By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/form/div[4]/div/div/div/div/button')

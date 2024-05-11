@@ -20,72 +20,67 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
-
-#随机注册成功的手机号码
+#"A randomly generated successful registration phone number."
 def generate_phone_number():
-    """生成一个基于时间戳的唯一手机号"""
+    """"Generate a unique phone number based on a timestamp."""
     tail = random.randint(10000000, 99999999)
     return "157" + str(tail)
 def load_yaml_data(filepath):
     abs_file_path = os.path.join(DIR_PATH, filepath)
     with open(abs_file_path, 'r', encoding='utf-8') as file:
         data = yaml.safe_load(file)
-        return data['register_tests']  #修改这里以匹配新的YAML结构
+        return data['register_tests']  #Modify this part to match the new YAML structure.
 
-# 加载YAML文件中的测试数据
+# "Load test data from the YAML file."
 test_data = load_yaml_data("data/register_data.yaml")
-print('测数据',test_data)
+print('test data',test_data)
 
-#fixure写法更推荐
+
 @pytest.fixture
 def driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # 开启无头模式
-    chrome_options.add_argument("--no-sandbox")  # 绕过OS安全模型
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--v=1")
     chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-
-    driver_path = os.path.join(os.environ['HOME'], 'bin', 'chromedriver')  # 假定你已经将chromedriver放在了$HOME/bin目录下
-    service = Service(executable_path = driver_path)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    # driver = webdriver.Chrome()  #本地
+    # driver = webdriver.Chrome()
     driver.implicitly_wait(10)
     yield  driver
     # time.sleep(5)
-    # 测试完成后执行的代码
+
     driver.quit()
 
 
-# 使用parametrize装饰器注入测试数据
+
 @pytest.mark.parametrize("case", test_data)
 def test_register(driver,case):
-    # 实例化LoginPage类
-    register_page = RegisterPage(driver)
-    register_page.go_to() # 访问登录页面
-    register_page.navigate_to_register() #点击立即注册链接跳转到注册页面
 
-    #根据测试用例决定是否动态生成手机号码
+    register_page = RegisterPage(driver)
+    register_page.go_to()
+    register_page.navigate_to_register()
+
+    #Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone',False):
         phoneNumber = generate_phone_number()
     else:
-        phoneNumber = case.get('username',generate_phone_number())# 如果没有提供，也生成一个
+        phoneNumber = case.get('username',generate_phone_number())# If not provided, generate one anyway.
 
-    # 从测试数据获取其他字段的值
+    # Get  values for other fields from the test data.
 
     invitation_code = case.get('invitation_code','')
-    verification_code = case.get('verification_code', '666666')  # 如果没有指定，默认为 '666666'
+    verification_code = case.get('verification_code', '666666')
     nickname = case.get('nickname ', 'TestNick')
     password = case.get('password ', '111111a')
     password2 = case.get('password2 ', '111111a')
 
     result = register_page.register(phoneNumber,invitation_code,nickname,password,password2,verification_code)
 
-    # 添加断言逻辑
-    # 断言测试结果
-    assert case['expected'] in result, f"预期结果为'{case['expected']}'，实际结果：'{result}'"
+    assert case['expected'] in result, f"Expected result is'{case['expected']}'，Actual result is：'{result}'"
 
 
 
