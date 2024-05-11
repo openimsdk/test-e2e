@@ -77,14 +77,11 @@ def test_register(driver,case):
     register_page.go_to()
     register_page.navigate_to_register()
 
-    #Dynamically generate phone numbers based on test cases.
+    # Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone', False):
-
         phoneNumber = generate_phone_number()
-        # print("new_aphone:", phoneNumber)
     else:
         phoneNumber = case.get('username',read_first_registered_account())# If not provided, generate one anyway.
-        # print("csv_phone:", phoneNumber)
 
     # Get  values for other fields from the test data.
 
