@@ -42,7 +42,7 @@ def read_first_registered_account():
         account_pwd = accounts[0]
         has_phone, pwd = account_pwd
 
-        return has_phone  # 返回列表中的第一个账号元组
+        return has_phone
     else:
         assert False, "There are no available registered accounts for registered testing."
 
@@ -79,9 +79,12 @@ def test_register(driver,case):
 
     #Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone', False):
+
         phoneNumber = generate_phone_number()
+        # print("new_aphone:", phoneNumber)
     else:
         phoneNumber = case.get('username',read_first_registered_account())# If not provided, generate one anyway.
+        # print("csv_phone:", phoneNumber)
 
     # Get  values for other fields from the test data.
 
