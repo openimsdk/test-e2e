@@ -33,7 +33,9 @@ class TestRegistration:
 
     @pytest.mark.parametrize("case", test_registration.test_data)
     def test_registration(self, driver, case):
+        print('数据',case)
         test_registration.test_register(driver, case)
+
 
 class TestLogin:
     @pytest.fixture
