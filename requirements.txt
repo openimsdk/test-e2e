@@ -2,3 +2,4 @@ selenium
 PyYAML
 pytest
 chromedrivermanager
+pytest-ordering
