@@ -80,7 +80,6 @@ def test_send_text_msgs(send_msg_page, shared_phone, login, shared_state):
 def test_receive_message(driver, login, send_msg_page, shared_phone,shared_state):
     # driver.execute_script("window.open('');")
     # driver.switch_to.window(driver.window_handles[1])
-
     receiver_phone, receiver_password = shared_phone
     print('新建窗口后的', receiver_phone)
     login(receiver_phone, receiver_password)
