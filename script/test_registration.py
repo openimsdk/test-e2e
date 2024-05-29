@@ -69,8 +69,10 @@ def test_register(driver,case):
     # Dynamically generate phone numbers based on test cases.
     if case.get('generate_phone', False):
         phoneNumber = generate_phone_number()
+        print("随机号码注册成功：",phoneNumber)
     else:
         phoneNumber = case.get('username',read_first_registered_account())# If not provided, generate one anyway.
+        print("csv账号已存在:", phoneNumber)
 
     # Get  values for other fields from the test data.
 
