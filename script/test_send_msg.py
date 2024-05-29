@@ -66,9 +66,9 @@ def test_send_text_msgs(send_msg_page, shared_phone, login, shared_state):
         send_msg_page.upload_file(FILE_PATH, "file")
 
         assert send_msg_page.check_msg_send(msgs), 'Message sending failed'
-        assert send_msg_page.check_file_sent_successfully('image'), 'Image sending failed'
-        assert send_msg_page.check_file_sent_successfully('file'), 'Image sending failed'
-        assert send_msg_page.check_file_sent_successfully('video'), 'Video sending failed'
+        assert send_msg_page.check_file_sent_successfully('image', Locators.img1), 'Image sending failed'
+        assert send_msg_page.check_file_sent_successfully('file', Locators.file1), 'File sending failed'
+        assert send_msg_page.check_file_sent_successfully('video',Locators.video1), 'Video sending failed'
 
         shared_state['sent_files'] = ['image', 'video', 'file']
 
