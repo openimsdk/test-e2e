@@ -98,29 +98,16 @@ class SendMsgPage(BasePage):
 
         return all_messages_present
 
-    def check_file_sent_successfully(self, file_type, specific_locator=None):
+    def check_file_sent_successfully(self, file_type):
         print('检查图片视频文件')
-        if specific_locator:
-            locator = specific_locator
-        else:
-            locator = Locators.file_sent_success_loc[file_type]
+        locator = Locators.file_sent_success_loc[file_type]
         if not isinstance(locator, tuple):
             raise ValueError(f'"Locator for {file_type} must be a tuple.')
-        try:
-            self.scroll_to_bottom()
-            time.sleep(4)
-            # self.wait.until(EC.presence_of_element_located(locator))
 
-            self.base_find(locator)
-            return True
-        except TimeoutException:
-            self.driver.save_screenshot(f'file_sending_failed_{file_type}.png')
-            print(f"超时TimeoutException encountered while checking for file type: {file_type}")
-            return False
-        except StaleElementReferenceException:
-            self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
-            print(f"错误StaleElementReferenceException encountered while checking for file type: {file_type}")
-            return False
+        self.scroll_to_bottom()
+        # self.wait.until(EC.presence_of_element_located(locator))
+        self.base_find(locator)
+
 
     def check_received_messages(self):
         messages = []
