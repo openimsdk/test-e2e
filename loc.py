@@ -47,8 +47,16 @@ class Locators:
     file_sent_success_loc = {
         'image': (By.CSS_SELECTOR, 'img[src*="msg_picture"]'),
         'video': (By.CSS_SELECTOR, 'img[src*="msg_videoSnapshot"]'),
-        'file': (By.CSS_SELECTOR, '  div > div > span > div.ant-spin-nested-loading.css-1f72xif > div >'
-                                  ' div > div.mr-2.flex.h-full.flex-1.flex-col.justify-between.overflow-hidden')
+        'file': (By.XPATH, '  //div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
+        # 'file': (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/object/8745629711/'
+        #                        'msg_videoSnapshot_2c4a488a52392039d47696c6d3853e8d.png"]')
+    }
+    file_vir_success_loc = {
+        'image': (By.XPATH, '// *[ @ id = "chat_b37eb95cdee1324548c48a9f99143688"] / '
+                             'div / div / span / div[1] / div / div / div'),
+        'video': (By.XPATH, '// *[ @ id = "chat_0b2e2511e2ec2f5dd31e36d727ab9c3b"] / '
+                               'div / div / span / div[1] / div / div / div[1] / img'),
+        # 'file': (By.XPATH, '//div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]'),
         # 'file': (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/object/8745629711/'
         #                        'msg_videoSnapshot_2c4a488a52392039d47696c6d3853e8d.png"]')
     }
@@ -57,19 +65,19 @@ class Locators:
     # Specify picture
     # img1 = (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/'
     #                          'object/8745629711/msg_picture_55bdf4cb39e3c472bb1be6c56581f237.png"]')
-    img1 = (By.XPATH, ' // *[ @ id = "chat_b37eb95cdee1324548c48a9f99143688"] / '
-                             'div / div / span / div[1] / div / div / div')
-
-    # Specify video
-    # video1 = (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/object/8745629711/'
-    #                            'msg_videoSnapshot_2c4a488a52392039d47696c6d3853e8d.png"]')
-    video1 = (By.XPATH, '// *[ @ id = "chat_0b2e2511e2ec2f5dd31e36d727ab9c3b"] / '
-                               'div / div / span / div[1] / div / div / div[1] / img')
-
-    # Specify file
-    # '#chat_cee4930d6393aa93019c08971044355f > div > div > span > div.ant-spin-nested-loading.css-1eammq7 > div > div')
-    # //div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]
-    file1 = (By.XPATH, '//div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
+    # img1 = (By.XPATH, ' // *[ @ id = "chat_b37eb95cdee1324548c48a9f99143688"] / '
+    #                          'div / div / span / div[1] / div / div / div')
+    #
+    # # Specify video
+    # # video1 = (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/object/8745629711/'
+    # #                            'msg_videoSnapshot_2c4a488a52392039d47696c6d3853e8d.png"]')
+    # video1 = (By.XPATH, '// *[ @ id = "chat_0b2e2511e2ec2f5dd31e36d727ab9c3b"] / '
+    #                            'div / div / span / div[1] / div / div / div[1] / img')
+    #
+    # # Specify file
+    # # '#chat_cee4930d6393aa93019c08971044355f > div > div > span > div.ant-spin-nested-loading.css-1eammq7 > div > div')
+    # # //div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]
+    # file1 = (By.XPATH, '//div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
 
     # Agree with friends
     contacts = (By.CSS_SELECTOR, '#root > div > div > div > div > div.ant-layout.ant-layout-has-sider'
