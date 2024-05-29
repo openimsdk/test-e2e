@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ github.workspace }}/main-repo
-          pip install PyYAML webdriver_manager selenium pytest
+          pip install -r requirements.txt
       
       - name: Checkout compose repository
         uses: actions/checkout@v4
@@ -38,6 +38,6 @@ jobs:
       - name: Run tests
         run: |
           cd ${{ github.workspace }}/main-repo
-          pytest main.py
+          pytest -v -s ./script
 
       
