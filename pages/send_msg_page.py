@@ -124,26 +124,25 @@ class SendMsgPage(BasePage):
         if not isinstance(locator, tuple):
             raise ValueError(f'Locator for {file_type} must be a tuple.')
 
-        elements = self.base_find(locator)
         try:
-            if elements:
-                element = elements
-                self.scroll_to_element(element)
-                if file_type == 'image':
-                    print(f'接收到的图片文件: {element.get_attribute("src")}')
-                elif file_type == 'video':
-                    print(f'接收到的视频文件: {element.get_attribute("src")}')
-                elif file_type == 'file':
-                    print(f'接收到的普通文件: {element.text}')
-                return True
-            return False
+            elements = self.wait.until(EC.presence_of_element_located(locator))
+            print('看看是什么：', elements)
+            self.scroll_to_element(elements)
+            time.sleep(3)
+            if file_type == 'image':
+                print(f'接收到的图片文件: {elements.get_attribute("src")}')
+            elif file_type == 'video':
+                print(f'接收到的视频文件: {elements.get_attribute("src")}')
+            elif file_type == 'file':
+                print(f'接收到的普通文件: {elements.text}')
+            return True
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
-            print(f"超时：TimeoutException encountered while checking for received file type: {file_type}")
+            print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
             return False
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
-            print(f"StaleElementReferenceException encountered while checking for received file type: {file_type}")
+            print(f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
             return False
 
 
