@@ -36,11 +36,12 @@ class RegisterPage(BasePage):
     def navigate_to_register(self):
         self.base_click(self.register_link_loc)
 
-
-    def register(self,phoneNumber,invitation_code=None,nickname='',password='',password2='' ,verification_code='666666'  ):
+    def register(self, phoneNumber,invitation_code=None,nickname='',password='',password2='' ,verification_code='666666'  ):
         expected_url = "{}#/chat".format(HOST)
         """Fill out the registration information and submit, simulate the verification code step"""
-        """Fill out the registration information and submit, skipping the verification code input depending on the situation."""
+        """Fill out the registration information and submit,"""
+        """skipping the verification code input depending on the situation."""
+
         self.enter_text(self.user_count,phoneNumber)
         if invitation_code:
             self.enter_text(self.code,invitation_code)

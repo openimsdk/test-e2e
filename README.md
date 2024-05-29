@@ -47,16 +47,9 @@ To run all test cases in the suite:
 1. Open your Git testing environment.
 2. Execute the following command:
    ```
-   pytest main.py
+   pytest -v -s ./script  
    ```
 
-### IF Run a Single Test Case
-To run an individual test case:
-1. Open your Git testing environment.
-2. Execute the command below, replacing `test_single_test_file` with the name of your test file:
-   ```
-   pytest script/test_single_test_file
-   ```
 
 #### 4. Install OpenIM Server Test
 

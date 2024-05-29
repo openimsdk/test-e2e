@@ -1,9 +1,10 @@
 import time
 from selenium.webdriver.common.by import By
-
+from  selenium.webdriver.support import  expected_conditions as EC
 from base.base_page import BasePage
 from config import HOST
 from selenium import webdriver
+from selenium.webdriver.support.wait import WebDriverWait
 
 class LoginPage(BasePage):
     # loc
@@ -24,6 +25,8 @@ class LoginPage(BasePage):
         self.enter_text(self.pwd, password)
         self.base_click(self.login_button)
 
+    def wait_for_login_success(self,expected_url):
+        WebDriverWait(self.driver, 10).until(EC.url_to_be(expected_url))
 
 
 # if __name__ == '__main__':
