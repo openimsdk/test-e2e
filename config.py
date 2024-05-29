@@ -11,4 +11,3 @@ print('project address', DIR_PATH)
 
 
 
-

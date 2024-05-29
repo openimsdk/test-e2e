@@ -79,20 +79,20 @@ class SendMsgPage(BasePage):
         locator = Locators.file_sent_success_loc[file_type]
         if not isinstance(locator, tuple):
             raise ValueError(f'"Locator for {file_type} must be a tuple.')
-        # try:
-        # self.scroll_to_bottom()
-        # self.wait.until(EC.presence_of_element_located(locator))
+        try:
+            self.scroll_to_bottom()
+            self.wait.until(EC.presence_of_element_located(locator))
 
-        self.base_find(locator)
-        return True
-        # except TimeoutException:
-        #     self.driver.save_screenshot(f'file_sending_failed_{file_type}.png')
-        #     print(f"TimeoutException encountered while checking for file type: {file_type}")
-        #     return False
-        # except StaleElementReferenceException:
-        #     self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
-        #     print(f"StaleElementReferenceException encountered while checking for file type: {file_type}")
-        #     return False
+            self.base_find(locator)
+            return True
+        except TimeoutException:
+                self.driver.save_screenshot(f'file_sending_failed_{file_type}.png')
+                print(f"TimeoutException encountered while checking for file type: {file_type}")
+                return False
+        except StaleElementReferenceException:
+            self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
+            print(f"StaleElementReferenceException encountered while checking for file type: {file_type}")
+            return False
 
     def check_msg_send(self, msg):
         # Wait for the message to appear in the history
