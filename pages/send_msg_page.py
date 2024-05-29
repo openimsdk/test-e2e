@@ -80,15 +80,15 @@ class SendMsgPage(BasePage):
         if not isinstance(locator, tuple):
             raise ValueError(f'"Locator for {file_type} must be a tuple.')
         try:
-        self.scroll_to_bottom()
-        self.wait.until(EC.presence_of_element_located(locator))
+            self.scroll_to_bottom()
+            self.wait.until(EC.presence_of_element_located(locator))
 
-        self.base_find(locator)
-        return True
+            self.base_find(locator)
+            return True
         except TimeoutException:
-            self.driver.save_screenshot(f'file_sending_failed_{file_type}.png')
-            print(f"TimeoutException encountered while checking for file type: {file_type}")
-            return False
+                self.driver.save_screenshot(f'file_sending_failed_{file_type}.png')
+                print(f"TimeoutException encountered while checking for file type: {file_type}")
+                return False
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
             print(f"StaleElementReferenceException encountered while checking for file type: {file_type}")
