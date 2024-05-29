@@ -67,7 +67,7 @@ def test_send_text_msgs(send_msg_page, shared_phone, login, shared_state):
 
         assert send_msg_page.check_msg_send(msgs), 'Message sending failed'
         assert send_msg_page.check_file_sent_successfully('image'), 'Image sending failed'
-        assert send_msg_page.check_msg_send(msgs), 'Message sending failed'
+        assert send_msg_page.check_file_sent_successfully('file'), 'Image sending failed'
         assert send_msg_page.check_file_sent_successfully('video'), 'Video sending failed'
 
         shared_state['sent_files'] = ['image', 'video', 'file']
