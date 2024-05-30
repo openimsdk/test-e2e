@@ -128,7 +128,7 @@ class SendMsgPage(BasePage):
 
         try:
             wait = WebDriverWait(self.driver, 30, poll_frequency=1, ignored_exceptions=[NoSuchElementException])
-            elements = wait.until(EC.presence_of_element_located(locator))
+            elements = wait.until(EC.visibility_of_element_located(locator))
             print('看看是什么：', elements)
             self.scroll_to_element(elements)
             time.sleep(3)
