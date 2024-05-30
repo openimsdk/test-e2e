@@ -80,7 +80,7 @@ class SendMsgPage(BasePage):
             time.sleep(3)
             # 等待文件上传成功的反馈信息，例如文件名出现在页面上
             upload_success_indicator = Locators.file_sent_success_loc[file_type]
-            WebDriverWait(self.driver, 100).until(EC.presence_of_element_located(upload_success_indicator))
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(upload_success_indicator))
             print(f"File uploaded successfully and verified on the page: {file_path}")
 
             self.scroll_to_bottom()
@@ -129,7 +129,6 @@ class SendMsgPage(BasePage):
     #     # self.wait.until(EC.presence_of_element_located(locator))
     #     self.base_find(locator)
 
-
     def check_received_messages(self):
         messages = []
         self.scroll_to_top_of_chat()
@@ -146,11 +145,11 @@ class SendMsgPage(BasePage):
             raise ValueError(f'Locator for {file_type} must be a tuple.')
 
         try:
-            WebDriverWait(self.driver, 20).until(
+            WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
             print('查看接收类型：',file_type)
-            elements = WebDriverWait(self.driver, 100).until(EC.presence_of_element_located(locator))
+            elements = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
             # elements = wait.until(EC.visibility_of_element_located(locator))
             print('等待元素可见看看是什么：', elements)
             self.scroll_to_element(elements)
