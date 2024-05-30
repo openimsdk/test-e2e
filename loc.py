@@ -47,7 +47,7 @@ class Locators:
     file_sent_success_loc = {
         'image': (By.CSS_SELECTOR, 'img[src*="msg_picture"]'),
         'video': (By.CSS_SELECTOR, 'img[src*="msg_videoSnapshot"]'),
-        'file': (By.XPATH, '  //div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
+        'file': (By.XPATH, '//div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
     }
 
     video_svg = (By.CSS_SELECTOR, 'path._triangle_iu6ca_19')
