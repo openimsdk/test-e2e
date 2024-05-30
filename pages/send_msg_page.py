@@ -1,5 +1,6 @@
 from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 from base.base_page import BasePage
 from config import HOST
