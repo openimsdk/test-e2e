@@ -48,9 +48,10 @@ class Locators:
         'image': (By.CSS_SELECTOR, 'img[src*="msg_picture"]'),
         'video': (By.CSS_SELECTOR, 'img[src*="msg_videoSnapshot"]'),
         'file': (By.XPATH, '  //div[@class="ant-spin-container"]/div/div/div[contains(text(),"OpenIM.pdf")]')
-        # 'file': (By.CSS_SELECTOR, 'img[src*="http://192.168.2.20:10002/object/8745629711/'
-        #                        'msg_videoSnapshot_2c4a488a52392039d47696c6d3853e8d.png"]')
     }
+
+    video_svg = (By.CSS_SELECTOR, 'path._triangle_iu6ca_19')
+
     file_vir_success_loc = {
         'image': (By.XPATH, '// *[ @ id = "chat_b37eb95cdee1324548c48a9f99143688"] / '
                              'div / div / span / div[1] / div / div / div'),
