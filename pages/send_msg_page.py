@@ -149,7 +149,7 @@ class SendMsgPage(BasePage):
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
 
             print('查看接收类型：',file_type)
-            elements = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
+            elements = WebDriverWait(self.driver, 20).until(EC.presence_of_element_located(locator))
             # elements = wait.until(EC.visibility_of_element_located(locator))
             print('等待元素可见看看是什么：', elements)
             self.scroll_to_element(elements)
@@ -173,15 +173,16 @@ class SendMsgPage(BasePage):
 
             elif file_type == 'file':
                 # 对文件的特殊处理，这里依赖于元素的显示状态和可能的文本内容
-                if not elements.is_displayed():
-                    raise ValueError("文件链接未显示。")
-                print(f'接收到的普通文件: {elements.text}')
+                if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
+                    raise ValueError("文件未正确显示或文件名不匹配。")
+                print(f'接收到的文件: {elements.text}')
 
             return True
 
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
             print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
+            print(f"当前URL: {self.driver.current_url}")
             return False
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
