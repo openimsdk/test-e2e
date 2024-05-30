@@ -121,24 +121,46 @@ class SendMsgPage(BasePage):
         print('接收的内容有：', messages)
         return messages
 
-    def check_received_files(self,file_type):
+    def check_received_files(self, file_type):
         locator = Locators.file_sent_success_loc[file_type]
         if not isinstance(locator, tuple):
             raise ValueError(f'Locator for {file_type} must be a tuple.')
 
         try:
-            wait = WebDriverWait(self.driver, 30, poll_frequency=1, ignored_exceptions=[NoSuchElementException])
-            elements = wait.until(EC.visibility_of_element_located(locator))
-            print('看看是什么：', elements)
+            WebDriverWait(self.driver, 20).until(
+                lambda driver: driver.execute_script('return document.readyState') == 'complete')
+
+            print('查看接收类型：',file_type)
+            elements = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
+            # elements = wait.until(EC.visibility_of_element_located(locator))
+            print('等待元素可见看看是什么：', elements)
             self.scroll_to_element(elements)
             time.sleep(3)
-            if file_type == 'image':
-                print(f'接收到的图片文件: {elements.get_attribute("src")}')
-            elif file_type == 'video':
-                print(f'接收到的视频文件: {elements.get_attribute("src")}')
+
+            # 对图片和视频缩略图使用相同的加载验证逻辑
+            if file_type == 'image' or file_type == 'video':
+                is_valid = self.driver.execute_script(
+                    "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
+                    elements)
+                if not is_valid:
+                    raise ValueError(f"{file_type.capitalize()}未正确加载。")
+                print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
+
+            # 额外对视频检查播放按钮的存在
+            if file_type == 'video':
+                play_button = self.base_find(Locators.video_svg)
+                if not play_button:
+                    raise ValueError("播放按钮未找到。")
+                print("播放按钮存在，视频应可播放。")
+
             elif file_type == 'file':
+                # 对文件的特殊处理，这里依赖于元素的显示状态和可能的文本内容
+                if not elements.is_displayed():
+                    raise ValueError("文件链接未显示。")
                 print(f'接收到的普通文件: {elements.text}')
+
             return True
+
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
             print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
@@ -146,6 +168,10 @@ class SendMsgPage(BasePage):
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
             print(f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
+            return False
+        except ValueError as e:
+            self.driver.save_screenshot(f'file_invalid_{file_type}.png')
+            print(f"无效元素：{e}")
             return False
 
 

@@ -78,7 +78,7 @@ class BasePage:
                 self.reload_page_if_stuck()
 
     def javascript_click(self,locator):
-        element =self.wait.until(EC.presence_of_element_located(locator))
+        element =self.wait.until(EC.element_to_be_clickable(locator))
         self.driver.execute_script("arguments[0].click();",element)
 
     def reload_page_if_stuck(self):
