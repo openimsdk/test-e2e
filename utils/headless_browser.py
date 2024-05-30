@@ -1,23 +1,18 @@
+import os
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 def create_headless_driver():
-        # chrome_options = Options()
-        # chrome_options.add_argument("--headless")  # Enable headless mode
-        # chrome_options.add_argument("--no-sandbox")  # Bypassing the operating system security model
-        # chrome_options.add_argument("--disable-dev-shm-usage")  # Avoid sharing memory
-        # chrome_options.add_argument("--disable-gpu")  # Disable GPU usage
-        # chrome_options.add_argument("--window-size=1920x1080")  # Set the window size
-        # chrome_options.add_argument("--disable-software-rasterizer")  # Disable software rasterizer
-        # chrome_options.add_argument("--enable-logging")
-        # chrome_options.add_argument("--v=1")
-        # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        options = Options()
+        # 根据环境变量决定是否启用无头模式
+        if os.getenv('BROWSER_MODE') == 'headless':
+                options.headless = True  # 启用无头模式
+        else:
+                options.headless = False  # 启用实体浏览器模式
 
-        driver = webdriver.Chrome()  # Locally
+        driver = webdriver.Chrome(options=options)  # Locally
         driver.maximize_window()
         driver.implicitly_wait(10)
         return driver
