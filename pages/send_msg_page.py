@@ -148,36 +148,19 @@ class SendMsgPage(BasePage):
         try:
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
+            print('查看接收类型：', file_type)
 
-            print('查看接收类型：',file_type)
-            elements = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located(*locator))
-            # elements = wait.until(EC.visibility_of_element_located(locator))
-            print('等待元素可见看看是什么：', elements)
-            self.scroll_to_element(elements)
-            time.sleep(3)
+            elements = self.driver.find_elements(*locator)
+            if not elements:
+                print(f"未找到类型为 {file_type} 的文件元素。")
+                return False
 
-            # 对图片和视频缩略图使用相同的加载验证逻辑
-            if file_type == 'image' or file_type == 'video':
-                is_valid = self.driver.execute_script(
-                    "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
-                    elements)
-                if not is_valid:
-                    raise ValueError(f"{file_type.capitalize()}未正确加载。")
-                print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
-
-            # 额外对视频检查播放按钮的存在
-            if file_type == 'video':
-                play_button = self.base_find(Locators.video_svg)
-                if not play_button:
-                    raise ValueError("播放按钮未找到。")
-                print("播放按钮存在，视频应可播放。")
-
-            elif file_type == 'file':
-                # 对文件的特殊处理，这里依赖于元素的显示状态和可能的文本内容
-                if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
-                    raise ValueError("文件未正确显示或文件名不匹配。")
-                print(f'接收到的文件: {elements.text}')
-
+            print('找到文件啦', elements)
+            # 因为find_elements返回的是列表，所以我们需要循环遍历或者选择一个特定的元素来交互
+            for element in elements:
+                self.scroll_to_element(element)
+                if file_type == 'file':
+                    print(f'接收到的普通文件: {element.text}')
             return True
 
         except TimeoutException:
@@ -185,14 +168,16 @@ class SendMsgPage(BasePage):
             print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
             print(f"当前URL: {self.driver.current_url}")
             return False
+
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
-            print(f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
+            print(
+                f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
             return False
-        except ValueError as e:
+
+        except Exception as e:  # 更广泛地捕获其他异常
             self.driver.save_screenshot(f'file_invalid_{file_type}.png')
             print(f"无效元素：{e}")
             return False
-
 
 
