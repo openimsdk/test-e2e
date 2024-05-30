@@ -5,22 +5,22 @@ import pytest
 
 from pages.add_friend_page import AddFriendPage
 
-from utils.headless_browser import create_headless_driver
+from utils.headless_browser import  create_driver
 from utils.read_accounts import read_registered_accounts
 from utils.token import login
 
 
 @pytest.fixture
-def headless_driver():
-    driver = create_headless_driver()
+def browser_driver():
+    driver = create_driver()
     time.sleep(3)
     yield driver
     driver.quit()
 
 
 @pytest.fixture
-def driver(headless_driver):  # The fixture approach is more recommended.
-    return headless_driver
+def driver(browser_driver):  # The fixture approach is more recommended.
+    return browser_driver
 
 
 def read_first_registered_account():

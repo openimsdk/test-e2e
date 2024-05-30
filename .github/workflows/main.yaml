@@ -5,10 +5,10 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           path: main-repo
@@ -20,6 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libxi6 libgconf-2-4
           cd ${{ github.workspace }}/main-repo
           pip install -r requirements.txt
 
@@ -35,18 +37,9 @@ jobs:
           docker compose up -d
           sleep 60
 
-      - name: Setup Chrome
-        run: |
-          choco install googlechrome
-          choco install chromedriver
-          $env:PATH += ";C:\Program Files\Google\Chrome\Application"
-          $env:PATH += ";C:\ProgramData\chocolatey\lib\chromedriver\tools"
-
-      - name: Run tests with Chrome browser
+      - name: Run tests with Xvfb
         run: |
           cd ${{ github.workspace }}/main-repo
-          pytest -v -s ./script
-        env:
-          BROWSER_MODE: 'chrome'
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script
 
       
