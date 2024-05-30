@@ -1,4 +1,4 @@
-from selenium.common import TimeoutException, StaleElementReferenceException
+from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from base.base_page import BasePage
@@ -6,6 +6,7 @@ from config import HOST
 from loc import Locators
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class SendMsgPage(BasePage):
@@ -125,7 +126,8 @@ class SendMsgPage(BasePage):
             raise ValueError(f'Locator for {file_type} must be a tuple.')
 
         try:
-            elements = self.wait.until(EC.presence_of_element_located(locator))
+            wait = WebDriverWait(self.driver, 30, poll_frequency=1, ignored_exceptions=[NoSuchElementException])
+            elements = wait.until(EC.presence_of_element_located(locator))
             print('看看是什么：', elements)
             self.scroll_to_element(elements)
             time.sleep(3)
