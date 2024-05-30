@@ -4,7 +4,7 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
 from loc import Locators
-from utils.headless_browser import create_headless_driver
+from utils.headless_browser import  create_driver
 from utils.read_accounts import read_registered_accounts
 import pytest
 from selenium import webdriver
@@ -17,15 +17,16 @@ from tkinter import simpledialog
 from  utils.token import login
 
 @pytest.fixture
-def headless_driver():
-    driver = create_headless_driver()
+def browser_driver():
+    driver = create_driver()
+    time.sleep(3)
     yield driver
     driver.quit()
 
 
 @pytest.fixture
-def driver(headless_driver):  # The fixture approach is more recommended.
-    return headless_driver
+def driver(browser_driver):  # The fixture approach is more recommended.
+    return browser_driver
 
 
 
