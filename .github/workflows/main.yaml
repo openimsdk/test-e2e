@@ -5,10 +5,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout main repository
         uses: actions/checkout@v4
         with:
           path: main-repo
@@ -22,22 +22,31 @@ jobs:
         run: |
           cd ${{ github.workspace }}/main-repo
           pip install -r requirements.txt
-      
+
       - name: Checkout compose repository
         uses: actions/checkout@v4
         with:
           repository: "openimsdk/openim-docker"
           path: "compose-repo"
-  
+
       - name: Start services using Docker Compose
         run: |
           cd ${{ github.workspace }}/compose-repo
           docker compose up -d
           sleep 60
 
-      - name: Run tests
+      - name: Setup Chrome
+        run: |
+          choco install googlechrome
+          choco install chromedriver
+          $env:PATH += ";C:\Program Files\Google\Chrome\Application"
+          $env:PATH += ";C:\ProgramData\chocolatey\lib\chromedriver\tools"
+
+      - name: Run tests with Chrome browser
         run: |
           cd ${{ github.workspace }}/main-repo
           pytest -v -s ./script
+        env:
+          BROWSER_MODE: 'chrome'
 
       
