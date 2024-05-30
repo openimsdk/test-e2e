@@ -48,14 +48,14 @@ def send_msg_page(driver, login):  # Encapsulate the login page Because text, vi
     send_msg_page.go_to()
     return send_msg_page
 
-
-@pytest.fixture(scope='session')
-def shared_state():
-    return {}
+#
+# @pytest.fixture(scope='session')
+# def shared_state():
+#     return {}
 
 
 @pytest.mark.run(order=5)
-def test_send_text_msgs(send_msg_page, shared_phone, login,shared_state):
+def test_send_text_msgs(send_msg_page, shared_phone, login):
     test_login = read_registered_accounts(0)
     if test_login:
         phone, pwd = test_login
@@ -74,14 +74,14 @@ def test_send_text_msgs(send_msg_page, shared_phone, login,shared_state):
         assert send_msg_page.check_received_files('video'), 'Video sending failed'
         time.sleep(4)
         assert send_msg_page.check_received_files('file'), 'File sending failed'
-        shared_state['sent_files'] = ['image', 'video', 'file']
+        # shared_state['sent_files'] = ['image', 'video', 'file']
 
     else:
         pytest.fail("There are no available registered accounts for testing message sending")
 
 
 @pytest.mark.run(order=6)
-def test_receive_message(driver, login, send_msg_page, shared_phone,shared_state):
+def test_receive_message(driver, login, send_msg_page, shared_phone):
     # driver.execute_script("window.open('');")
     # driver.switch_to.window(driver.window_handles[1])
     receiver_phone, receiver_password = shared_phone
@@ -98,12 +98,13 @@ def test_receive_message(driver, login, send_msg_page, shared_phone,shared_state
         expected_msgs = ['Hello! This is the first message。', 'This is the second test message。', 'The last message！']
         assert all(msg in received_msgs for msg in expected_msgs), "有消息未正确接收"
         print("所有文本消息都已成功接收。")
-        for file_type in shared_state.get('sent_files', []):
-            assert send_msg_page.check_received_files(file_type), f'{file_type.capitalize()} receiving failed'
-        # assert send_msg_page.check_received_files('image'), 'Image sending failed'
-        # assert send_msg_page.check_received_files('file'), 'File sending failed'
-        # assert send_msg_page.check_received_files('video'), 'Video sending failed'
-        time.sleep(10)
+
+        assert send_msg_page.check_received_files('image'), 'Image sending failed'
+        time.sleep(4)
+        assert send_msg_page.check_received_files('video'), 'Video sending failed'
+        time.sleep(4)
+        assert send_msg_page.check_received_files('file'), 'File sending failed'
+        time.sleep(6)
 
 
 

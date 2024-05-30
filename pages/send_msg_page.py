@@ -1,3 +1,5 @@
+import os
+
 from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -72,10 +74,28 @@ class SendMsgPage(BasePage):
         # Make sure "locator" is a tuple
         if not isinstance(locator, tuple):
             raise ValueError(f"Locator for {file_type} must be a tuple.")
-        file_input = self.driver.find_element(*locator)
-        file_input.send_keys(file_path)  # Use "send_keys" to upload files
-        self.scroll_to_bottom()
-        time.sleep(2)
+        try:
+            file_input = self.driver.find_element(*locator)
+            file_input.send_keys(file_path)  # Use "send_keys" to upload files
+            print(f"尝试上传文件: {file_path}")
+            time.sleep(3)
+            # 等待文件上传成功的反馈信息，例如文件名出现在页面上
+            upload_success_indicator = Locators.file_sent_success_loc[file_type]
+            WebDriverWait(self.driver, 20).until(EC.presence_of_element_located(upload_success_indicator))
+            print(f"File uploaded successfully and verified on the page: {file_path}")
+
+            self.scroll_to_bottom()
+            time.sleep(2)
+            return True
+        except TimeoutException:
+            print("Timeout occurred while trying to verify the file upload.")
+            self.driver.save_screenshot(f"timeout_upload_{file_type}.png")
+            return False
+
+        except Exception as e:
+            print(f"An error occurred while uploading the file: {e}")
+            self.driver.save_screenshot(f"error_upload_{file_type}.png")
+            return False
 
     def check_msg_send(self, msg):
         # Wait for the message to appear in the history
