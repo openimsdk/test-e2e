@@ -151,7 +151,9 @@ class SendMsgPage(BasePage):
             print('页面已完全加载')
 
             # 获取页面的源代码
+            print("正在获取页面源代码...")
             source_code = self.driver.page_source
+            print("页面源代码已获取。")
 
             file_keyword = "OpenIM.pdf"  # 假设你知道文件类型为'file'时的关键词是"OpenIM.pdf"
             if file_keyword in source_code:

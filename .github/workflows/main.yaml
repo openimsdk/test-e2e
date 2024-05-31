@@ -31,9 +31,18 @@ jobs:
           repository: "openimsdk/openim-docker"
           path: "compose-repo"
 
+      - name: Get Internal IP Address
+        id: get-ip
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "The IP Address is: $IP"
+          echo "::set-output name=ip::$IP"
+
       - name: Start services using Docker Compose
         run: |
           cd ${{ github.workspace }}/compose-repo
+          sed -i 's|MINIO_EXTERNAL_ADDRESS=.*|MINIO_EXTERNAL_ADDRESS=http://${{ steps.get-ip.outputs.ip }}:10005|' ${{ github.workspace }}/compose-repo/.env
+          cat .env
           docker compose up -d
           sleep 60
 
@@ -42,4 +51,3 @@ jobs:
           cd ${{ github.workspace }}/main-repo
           xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script
 
-      
