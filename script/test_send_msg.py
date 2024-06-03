@@ -63,17 +63,17 @@ def test_send_text_msgs(send_msg_page, shared_phone, login):
         strange_phone, strange_password = shared_phone
         msgs = ['Hello! This is the first message。', 'This is the second test message。', 'The last message！']
         send_msg_page.send_msg(strange_phone, msgs)
-        # send_msg_page.upload_file(IMAGE_PATH, "image")
         # send_msg_page.upload_file(VIDEO_PATH, "video")
         send_msg_page.upload_file(FILE_PATH, "file")
+        send_msg_page.upload_file(IMAGE_PATH, "image")
 
         assert send_msg_page.check_msg_send(msgs), 'Message sending failed'
-        # time.sleep(4)
-        # assert send_msg_page.check_received_files('image'), 'Image sending failed'
         # time.sleep(4)
         # assert send_msg_page.check_received_files('video'), 'Video sending failed'
         # time.sleep(4)
         assert send_msg_page.check_received_files('file'), 'File sending failed'
+        time.sleep(4)
+        assert send_msg_page.check_received_files('image'), 'Image sending failed'
         # shared_state['sent_files'] = ['image', 'video', 'file']
 
     else:
@@ -98,12 +98,11 @@ def test_receive_message(driver, login, send_msg_page, shared_phone):
         expected_msgs = ['Hello! This is the first message。', 'This is the second test message。', 'The last message！']
         assert all(msg in received_msgs for msg in expected_msgs), "有消息未正确接收"
         print("所有文本消息都已成功接收。")
-
-        # assert send_msg_page.check_received_files('image'), 'Image sending failed'
-        # time.sleep(4)
         # assert send_msg_page.check_received_files('video'), 'Video sending failed'
         # time.sleep(4)
         assert send_msg_page.check_received_files('file'), 'File sending failed'
+        time.sleep(4)
+        assert send_msg_page.check_received_files('image'), 'Image sending failed'
         time.sleep(6)
 
 

@@ -148,13 +148,23 @@ class SendMsgPage(BasePage):
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
             print('查看接收类型：', file_type)
-            print('页面已完全加载')
+            print('等待元素可见看看是什么：', elements)
+            self.scroll_to_element(elements)
+            print('页面已完全加载且滚动到该元素上')
+            if file_type == 'image':
+                is_valid = self.driver.execute_script(
+                    "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
+                    elements)
+                if not is_valid:
+                    raise ValueError(f"{file_type.capitalize()}未正确加载。")
+                print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
 
-            if file_type == 'file':
+            elif file_type == 'file':
                 if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
                     raise ValueError("文件未正确显示或文件名不匹配。")
                 print(f'接收到的普通文件: {elements.text}')
             return True
+
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
             print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
