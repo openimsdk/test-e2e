@@ -1,9 +1,13 @@
 import os
-#OPENIM的WEB地址
 HOST = "http://127.0.0.1:11001/"
-#项目路径
+# address
 DIR_PATH = os.path.dirname(__file__)
-print('项目地址',DIR_PATH)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_PATH = os.path.join(BASE_DIR, 'resources/images/img1.png')
+VIDEO_PATH = os.path.join(BASE_DIR, 'resources/videos/video1.mp4')
+FILE_PATH = os.path.join(BASE_DIR, 'resources/files/OpenIM.pdf')
+print('project address', DIR_PATH)
+
 
 
 

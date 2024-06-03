@@ -1,0 +1,5 @@
+selenium
+PyYAML
+pytest
+webdriver_manager
+pytest-ordering

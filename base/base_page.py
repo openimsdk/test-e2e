@@ -4,9 +4,13 @@ import time
 
 
 from selenium import webdriver
+from selenium.common import TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from  selenium.webdriver.support import  expected_conditions as EC
 from config import HOST, DIR_PATH
+from utils.test_invisibility import test_invisibility_of_element_located
+
 
 # wd = webdriver.Chrome()
 # wd.get(HOST)
@@ -48,3 +52,37 @@ class BasePage:
 
     def is_visible(self, locator, timeout=10):
         return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+    def wait_for_element_invisible(self, loc, text):
+        """等待特定文本的元素不可见。"""
+        self.wait.until(
+            test_invisibility_of_element_located(loc, text)
+        )
+
+
+    def wait_masks_invisible(self):
+        try:
+            self.wait.until(lambda  d:d.execute_script('return document.readyState') == 'complete')
+            masks = [
+                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), '登录中...'),
+                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), '同步中...')
+            ]
+            for loc,text in masks:
+                try:
+                        # 尝试找到元素并确认其不可见
+                        self.wait_for_element_invisible(loc, text)
+                        # print(f"{text} 遮罩消失了。")
+                except TimeoutException:
+                        print(f"等待 {text} 遮罩消失超时。")
+        except TimeoutException:
+                print("页面加载超时，尝试重新加载页面。")
+                self.reload_page_if_stuck()
+
+    def javascript_click(self,locator):
+        element =self.wait.until(EC.element_to_be_clickable(locator))
+        self.driver.execute_script("arguments[0].click();",element)
+
+    def reload_page_if_stuck(self):
+        current_url = self.driver.current_url
+        self.driver.get(current_url)
+        print("页面重新加载尝试解决问题。")
+        self.wait_masks_invisible()  # 再次等待遮罩消失

@@ -1,3 +1,4 @@
+
 name: Continuous Integration
 
 on:
@@ -20,24 +21,35 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libxi6 libgconf-2-4
           cd ${{ github.workspace }}/main-repo
-          pip install PyYAML webdriver_manager selenium pytest
-      
+          pip install -r requirements.txt
+
       - name: Checkout compose repository
         uses: actions/checkout@v4
         with:
           repository: "openimsdk/openim-docker"
           path: "compose-repo"
-  
+
+      - name: Get Internal IP Address
+        id: get-ip
+        run: |
+          IP=$(hostname -I | awk '{print $1}')
+          echo "The IP Address is: $IP"
+          echo "::set-output name=ip::$IP"
+
       - name: Start services using Docker Compose
         run: |
           cd ${{ github.workspace }}/compose-repo
+          sed -i 's|MINIO_EXTERNAL_ADDRESS=.*|MINIO_EXTERNAL_ADDRESS=http://${{ steps.get-ip.outputs.ip }}:10005|' ${{ github.workspace }}/compose-repo/.env
+          cat .env
           docker compose up -d
           sleep 60
 
-      - name: Run tests
+      - name: Run tests with Xvfb
         run: |
           cd ${{ github.workspace }}/main-repo
-          pytest main.py
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script
 
-      
+
