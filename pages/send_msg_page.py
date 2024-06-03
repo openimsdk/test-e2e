@@ -151,14 +151,18 @@ class SendMsgPage(BasePage):
             print('等待元素可见看看是什么：', elements)
             self.scroll_to_element(elements)
             print('页面已完全加载且滚动到该元素上')
-            if file_type == 'image':
+            if file_type == 'image' or file_type == 'video':
                 is_valid = self.driver.execute_script(
                     "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
                     elements)
                 if not is_valid:
                     raise ValueError(f"{file_type.capitalize()}未正确加载。")
                 print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
-
+            if file_type == 'video':
+                play_button = self.base_find(Locators.video_svg)
+                if not play_button:
+                    raise ValueError("视频播放按钮未找到。")
+                print("播放按钮存在，确认是视频文件。")
             elif file_type == 'file':
                 if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
                     raise ValueError("文件未正确显示或文件名不匹配。")
