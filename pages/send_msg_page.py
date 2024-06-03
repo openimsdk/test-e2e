@@ -65,7 +65,7 @@ class SendMsgPage(BasePage):
             # all_msgs += messages + " "  # Assuming messages are separated by spaces
             time.sleep(1)  # A brief pause to ensure message sending
         self.scroll_to_bottom()
-        print('发送3条消息后滚到底部以便发送图片等')
+        # print('发送3条消息后滚到底部以便发送图片等')
 
     def upload_file(self, file_path, file_type):
         locator = Locators.file_type_to_loc[file_type]
@@ -78,7 +78,7 @@ class SendMsgPage(BasePage):
             file_input.send_keys(file_path)  # Use "send_keys" to upload files
             print(f"尝试上传文件: {file_path}")
             time.sleep(3)
-            # 等待文件上传成功的反馈信息，例如文件名出现在页面上
+
             upload_success_indicator = Locators.file_sent_success_loc[file_type]
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(upload_success_indicator))
             print(f"File uploaded successfully and verified on the page: {file_path}")
@@ -107,11 +107,11 @@ class SendMsgPage(BasePage):
 
         for element in message_elements:
             self.scroll_to_element(element)
-            print('捕捉到滚动到消息元素：', element.text)
+            # print('捕捉到滚动到消息元素：', element.text)
             messages_texts.append(element.text)
 
         message_text = ' '.join(messages_texts)
-        print('检查验证消息有：', message_text)
+        # print('检查验证消息有：', message_text)
         # Check if each message appears in the chat history
 
         all_messages_present = all(message in message_text for message in msg)
@@ -181,7 +181,7 @@ class SendMsgPage(BasePage):
                 f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
             return False
 
-        except Exception as e:  # 更广泛地捕获其他异常
+        except Exception as e:  # Catch other anomalies more broadly
             self.driver.save_screenshot(f'file_invalid_{file_type}.png')
             print(f"无效元素：{e}")
             return False

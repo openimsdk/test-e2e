@@ -100,7 +100,7 @@ def test_receive_message(driver, login, send_msg_page, shared_phone, shared_stat
         # assert send_msg_page.check_received_files('file'), 'File sending failed'
         # assert send_msg_page.check_received_files('image'), 'Image sending failed'
         # assert send_msg_page.check_received_files('video'), 'Video sending failed'
-        for file_type in shared_state.get('sent_file', []):
+        for file_type in shared_state.get('sent_files', []):
             assert send_msg_page.check_received_files(file_type), f'{file_type.capitalize()} receiving failed'
     else:
         pytest.fail("There are no available registered accounts for testing message sending")

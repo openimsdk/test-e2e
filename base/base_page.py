@@ -70,7 +70,7 @@ class BasePage:
                 try:
                         # 尝试找到元素并确认其不可见
                         self.wait_for_element_invisible(loc, text)
-                        print(f"{text} 遮罩消失了。")
+                        # print(f"{text} 遮罩消失了。")
                 except TimeoutException:
                         print(f"等待 {text} 遮罩消失超时。")
         except TimeoutException:
