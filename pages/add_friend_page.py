@@ -50,7 +50,7 @@ class AddFriendPage(BasePage):
         if message_check(self.driver):
             print("发送好友请求成功。")
         else:
-            # 这里我们需要检查失败的情况
+            # Here we need to check the failure situation
             message_fail_check = test_visibility_of_element_located(msg_loc, "发送请求失败！")
             if message_fail_check(self.driver):
                 print("发送好友请求失败。")

@@ -70,7 +70,7 @@ class BasePage:
                 try:
                         # 尝试找到元素并确认其不可见
                         self.wait_for_element_invisible(loc, text)
-                        print(f"{text} 遮罩消失了。")
+                        # print(f"{text} 遮罩消失了。")
                 except TimeoutException:
                         print(f"等待 {text} 遮罩消失超时。")
         except TimeoutException:
@@ -78,7 +78,7 @@ class BasePage:
                 self.reload_page_if_stuck()
 
     def javascript_click(self,locator):
-        element =self.wait.until(EC.presence_of_element_located(locator))
+        element =self.wait.until(EC.element_to_be_clickable(locator))
         self.driver.execute_script("arguments[0].click();",element)
 
     def reload_page_if_stuck(self):

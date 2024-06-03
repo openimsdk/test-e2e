@@ -1,18 +1,16 @@
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
-
-def create_headless_driver():
-        chrome_options = Options()
-        chrome_options.add_argument("--headless") # Enable headless mode
-        chrome_options.add_argument("--no-sandbox") # Bypassing the operating system security model
-        chrome_options.add_argument("--enable-logging")
-        chrome_options.add_argument("--v=1")
-        chrome_options.add_argument("--disable-dev-shm-usage") # Avoid sharing memory
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+def create_driver():
+        options = Options()
+        options.add_argument('window-size=1920x1080')  # 设置窗口大小匹配Xvfb
+        options.page_load_strategy = 'eager'
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
         # driver = webdriver.Chrome()  # Locally
+        # driver.maximize_window()
         driver.implicitly_wait(10)
         return driver
