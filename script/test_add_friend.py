@@ -2,29 +2,25 @@ import time
 import webbrowser
 
 import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from config import HOST
-from pages.add_friend_page import AddFriendPage
-from pages.login_page import LoginPage
-from  selenium.webdriver.support import  expected_conditions as EC
 
-from utils.headless_browser import create_headless_driver
+from pages.add_friend_page import AddFriendPage
+
+from utils.headless_browser import  create_driver
 from utils.read_accounts import read_registered_accounts
+from utils.token import login
+
 
 @pytest.fixture
-def headless_driver():
-    driver = create_headless_driver()
+def browser_driver():
+    driver = create_driver()
     time.sleep(3)
     yield driver
     driver.quit()
 
 
 @pytest.fixture
-def driver(headless_driver):  # The fixture approach is more recommended.
-    return headless_driver
-
+def driver(browser_driver):  # The fixture approach is more recommended.
+    return browser_driver
 
 
 def read_first_registered_account():
@@ -38,14 +34,9 @@ def read_first_registered_account():
 
 
 @pytest.mark.run(order=3)
-def test_add_friends(driver):
-    login_page = LoginPage(driver)
-    login_page.go_to()
+def test_add_friends(driver, login):
     phone_number, pwd = read_first_registered_account()
-    login_page.login(phone_number, pwd)
-    expected_url = "{}#/chat".format(HOST)
-    login_page.wait_for_login_success(expected_url)
-
+    login(phone_number, pwd)
     add_friend_page = AddFriendPage(driver)
     add_friend_page.go_to()
 
@@ -57,4 +48,9 @@ def test_add_friends(driver):
         add_friend_page.add_friend(friend_phone, "你好，加个好友把！")
     else:
         assert False, "没有可用的注册账号来进行添加好友的测试"
+
+    # driver.execute_script("window.open('');")
+    # driver.switch_to.window(driver.window_handles[1])
+    # time.sleep(10)
+
 

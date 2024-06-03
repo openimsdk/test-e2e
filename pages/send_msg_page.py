@@ -1,8 +1,15 @@
+import os
+
+from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+
 from base.base_page import BasePage
 from config import HOST
 from loc import Locators
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class SendMsgPage(BasePage):
@@ -12,6 +19,24 @@ class SendMsgPage(BasePage):
 
     def go_to(self):
         self.driver.get(self.url)
+
+    def scroll_to_top_of_chat(self):
+        chat_window = self.driver.find_element(By.ID, 'chat-list')
+        self.driver.execute_script("arguments[0].scrollTop = 0;", chat_window)
+        time.sleep(3)
+        print('页面已经滚动到了顶部')
+
+    def scroll_to_bottom(self):
+        chat_window = self.driver.find_element(By.ID, 'chat-list')
+        self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", chat_window)
+        print('页面已经滚动到了底部')
+        time.sleep(2)
+
+    def scroll_to_element(self, element):
+        # chat_window = self.driver.find_element(By.CSS_SELECTOR, 'div.chat-window-selector')  # 更新选择器为聊天窗口的实际选择器
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        print('页面已经滚动到了', element, '元素的位置上', element.text)
+        time.sleep(1)
 
     def navigate_to_add_friend(self, strange_phone):
         self.wait_masks_invisible()
@@ -40,20 +65,126 @@ class SendMsgPage(BasePage):
             self.base_click(Locators.send_msg_btn_loc)
             # all_msgs += messages + " "  # Assuming messages are separated by spaces
             time.sleep(1)  # A brief pause to ensure message sending
+        self.scroll_to_bottom()
+        # print('发送3条消息后滚到底部以便发送图片等')
+
+    def upload_file(self, file_path, file_type):
+        locator = Locators.file_type_to_loc[file_type]
+        # Find th file input element and upload th file
+        # Make sure "locator" is a tuple
+        if not isinstance(locator, tuple):
+            raise ValueError(f"Locator for {file_type} must be a tuple.")
+        try:
+            file_input = self.driver.find_element(*locator)
+            file_input.send_keys(file_path)  # Use "send_keys" to upload files
+            print(f"尝试上传文件: {file_path}")
+            time.sleep(3)
+
+            upload_success_indicator = Locators.file_sent_success_loc[file_type]
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(upload_success_indicator))
+            print(f"File uploaded successfully and verified on the page: {file_path}")
+
+            self.scroll_to_bottom()
+            time.sleep(2)
+            return True
+        except TimeoutException:
+            print("Timeout occurred while trying to verify the file upload.")
+            self.driver.save_screenshot(f"timeout_upload_{file_type}.png")
+            return False
+
+        except Exception as e:
+            print(f"An error occurred while uploading the file: {e}")
+            self.driver.save_screenshot(f"error_upload_{file_type}.png")
+            return False
 
     def check_msg_send(self, msg):
-        # 等待消息出现在聊天历史中
+        # Wait for the message to appear in the history
         print('Testing the list of messages that are passed in', msg)
-        message_elements = self.wait.until(lambda driver:  driver.find_elements(*Locators.msg_panel_loc))
-        message_text = ' '.join([element.text for element in message_elements])
-        print('Chat history of sent messages：', message_text)
+        time.sleep(3)
+        self.scroll_to_top_of_chat()
+        message_elements = self.wait.until(lambda driver: driver.find_elements(*Locators.msg_panel_loc))
+        self.scroll_to_top_of_chat()
+        messages_texts = []
+
+        for element in message_elements:
+            self.scroll_to_element(element)
+            # print('捕捉到滚动到消息元素：', element.text)
+            messages_texts.append(element.text)
+
+        message_text = ' '.join(messages_texts)
+        # print('检查验证消息有：', message_text)
         # Check if each message appears in the chat history
-        return all(message in message_text for message in msg)
+
+        all_messages_present = all(message in message_text for message in msg)
+        print('所有消息-------:', all_messages_present)
+
+        return all_messages_present
+
+    # def check_file_sent_successfully(self, file_type):
+    #     print('检查图片视频文件')
+    #     locator = Locators.file_sent_success_loc[file_type]
+    #     if not isinstance(locator, tuple):
+    #         raise ValueError(f'"Locator for {file_type} must be a tuple.')
+    #
+    #     self.scroll_to_bottom()
+    #     # self.wait.until(EC.presence_of_element_located(locator))
+    #     self.base_find(locator)
 
     def check_received_messages(self):
         messages = []
+        self.scroll_to_top_of_chat()
         message_element = self.wait.until(lambda driver: driver.find_elements(*Locators.received_panel_loc))
         for element in message_element:
+            self.scroll_to_element(element)
             messages.append(element.text)
         print('接收的内容有：', messages)
         return messages
+
+    def check_received_files(self, file_type):
+        locator = Locators.file_sent_success_loc[file_type]
+        if not isinstance(locator, tuple):
+            raise ValueError(f'Locator for {file_type} must be a tuple.')
+        try:
+            elements = self.base_find(locator)
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.execute_script('return document.readyState') == 'complete')
+            print('查看接收类型：', file_type)
+            print('等待元素可见看看是什么：', elements)
+            self.scroll_to_element(elements)
+            print('页面已完全加载且滚动到该元素上')
+            if file_type == 'image' or file_type == 'video':
+                is_valid = self.driver.execute_script(
+                    "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
+                    elements)
+                if not is_valid:
+                    raise ValueError(f"{file_type.capitalize()}未正确加载。")
+                print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
+            if file_type == 'video':
+                play_button = self.base_find(Locators.video_svg)
+                if not play_button:
+                    raise ValueError("视频播放按钮未找到。")
+                print("播放按钮存在，确认是视频文件。")
+            elif file_type == 'file':
+                if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
+                    raise ValueError("文件未正确显示或文件名不匹配。")
+                print(f'接收到的普通文件: {elements.text}')
+            return True
+
+        except TimeoutException:
+            self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
+            print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
+            print(f"当前URL: {self.driver.current_url}")
+            return False
+
+        except StaleElementReferenceException:
+            self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
+            print(
+                f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
+            return False
+
+        except Exception as e:  # Catch other anomalies more broadly
+            self.driver.save_screenshot(f'file_invalid_{file_type}.png')
+            print(f"无效元素：{e}")
+            return False
+
+

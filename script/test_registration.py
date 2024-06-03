@@ -16,7 +16,7 @@ from selenium import webdriver
 from pages.registration_page import RegisterPage
 
 
-from utils.headless_browser import create_headless_driver
+from utils.headless_browser import  create_driver
 from utils.read_accounts import read_registered_accounts
 
 
@@ -47,15 +47,16 @@ test_data = load_yaml_data("data/register_data.yaml")
 # print('test data',test_data)
 
 @pytest.fixture
-def headless_driver():
-    driver = create_headless_driver()
+def browser_driver():
+    driver = create_driver()
+    time.sleep(3)
     yield driver
     driver.quit()
 
 
 @pytest.fixture
-def driver(headless_driver):  # The fixture approach is more recommended.
-    return headless_driver
+def driver(browser_driver):  # The fixture approach is more recommended.
+    return browser_driver
 
 
 @pytest.mark.run(order=1)

@@ -6,5 +6,5 @@ from utils.save_register import clear_all_files
 
 
 def pytest_configure(config):
-    """清理测试环境准备新的测试周期。"""
+    """Clean up the test environment in preparation for a new test cycle。"""
     clear_all_files(os.path.join(DIR_PATH, 'accounts'))

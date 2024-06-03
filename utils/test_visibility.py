@@ -1,10 +1,12 @@
 from selenium.common import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 class test_visibility_of_element_located:
-    def __init__(self,loc,text_):
+    def __init__(self, loc, text_):
         self.loc = loc
         self.text = text_
+
     def __call__(self, driver):
         try:
             # 等待元素出现，并返回True表示成功找到元素 使用text_to_be_present_in_element
