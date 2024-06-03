@@ -140,32 +140,21 @@ class SendMsgPage(BasePage):
         return messages
 
     def check_received_files(self, file_type):
-        # locator = Locators.file_sent_success_loc[file_type]
-        # if not isinstance(locator, tuple):
-        #     raise ValueError(f'Locator for {file_type} must be a tuple.')
-
+        locator = Locators.file_sent_success_loc[file_type]
+        if not isinstance(locator, tuple):
+            raise ValueError(f'Locator for {file_type} must be a tuple.')
         try:
+            elements = self.base_find(locator)
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
             print('查看接收类型：', file_type)
             print('页面已完全加载')
 
-            # 获取页面的源代码
-            source_code = self.driver.page_source
-
-            file_keyword = "OpenIM.pdf"  # 假设你知道文件类型为'file'时的关键词是"OpenIM.pdf"
-            if file_keyword in source_code:
-                print(f"页面源代码中存在 {file_type}：{file_keyword}")
-                # 验证页面元素是否存在
-                element_locator = Locators.file_sent_success_loc[file_type]  # 使用之前定义好的定位器
-                element = WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located(element_locator),
-                    message=f"{file_type} 不在页面中.")
-                print(f"在页面上找到了 {file_type}，文本为：{element.text}")
-                return True
-            else:
-                print(f"页面源代码中未找到期望的 {file_type}：{file_keyword}。")
-                return False
+            if file_type == 'file':
+                if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
+                    raise ValueError("文件未正确显示或文件名不匹配。")
+                print(f'接收到的普通文件: {elements.text}')
+            return True
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
             print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
