@@ -42,8 +42,9 @@ class BasePage:
 
     # 获取文本值方法
     def base_get_text(self,loc):
-        el =   self.wait.until(EC.visibility_of_element_located(loc))
-        return el.text
+        els =   self.wait.until(EC.visibility_of_all_elements_located(loc))
+        # return el.text
+        return [element.text for element in els]
 
     # 截图方法
     def base_get_img(self):

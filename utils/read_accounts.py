@@ -17,7 +17,7 @@ def read_registered_accounts(index, dir_path='accounts'):
         with open(file_path, mode='r', encoding='utf-8') as file:
             csv_reader = csv.reader(file)
             next(csv_reader, None)
-            accounts = [(row[0], row[1]) for row in csv_reader if len(row) > 1]
+            accounts = [(row[0], row[1], row[2]) for row in csv_reader if len(row) > 2]
 
             # accounts = [row[0] for row in csv_reader]
             # return accounts
@@ -28,8 +28,8 @@ def read_registered_accounts(index, dir_path='accounts'):
         return accounts[index]
 
 if __name__ == '__main__':
-    # registered_accounts = read_registered_accounts(0)
-    registered_accounts = read_registered_accounts(1)
+    registered_accounts = read_registered_accounts(0)
+    # registered_accounts = read_registered_accounts(1)
     if registered_accounts:
-        phone_number, password = registered_accounts
+        phone_number, password, nickname = registered_accounts
     print("Registration account:", registered_accounts)

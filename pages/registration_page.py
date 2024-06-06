@@ -91,7 +91,7 @@ class RegisterPage(BasePage):
             # Check if the URL has been redirected to the expected one.
             try:
                 WebDriverWait(self.driver, 10).until(EC.url_to_be(expected_url))
-                save_registered_account(phoneNumber, password)
+                save_registered_account(phoneNumber, password,nickname)
                 return "注册成功"
 
             except  TimeoutException:

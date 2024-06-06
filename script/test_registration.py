@@ -36,7 +36,7 @@ def load_yaml_data(filepath):
 def read_first_registered_account():
     registered_accounts = read_registered_accounts(0)
     if registered_accounts:
-        phone_number, password = registered_accounts
+        phone_number, password, _ = registered_accounts
         return phone_number
     else:
         assert False, "There are no available registered accounts for registered testing."
@@ -77,9 +77,11 @@ def test_register(driver,case):
 
     # Get  values for other fields from the test data.
 
+    random_number = random.randint(1, 99)
+    nickname = f"TestNick{random_number}"
     invitation_code = case.get('invitation_code','')
     verification_code = case.get('verification_code', '666666')
-    nickname = case.get('nickname ', 'TestNick')
+    nickname = case.get('nickname ', nickname)
     password = case.get('password ', '111111a')
     password2 = case.get('password2 ', '111111a')
 
