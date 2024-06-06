@@ -65,3 +65,21 @@ class AddFriendPage(BasePage):
                     print("未知的结果，弹窗文本为：", message_text)
                 except TimeoutException:
                     print("没有找到预期的反馈消息。")
+
+
+    def agree_friend(self,addfriend_nickname):
+        self.wait_masks_invisible()
+        time.sleep(2)
+        self.base_click(Locators.contacts)
+        self.base_click(Locators.newFriend_list)
+        friend_names = self.base_get_text(Locators.friend_name)
+        print('检测申请列表的好友有：', friend_names)
+        if addfriend_nickname in friend_names:
+            print(f"已收到该{addfriend_nickname}好友的申请。")
+        else:
+            print(f"{addfriend_nickname}申请不存在。")
+        self.base_click(Locators.agree)
+        time.sleep(2)
+
+
+

@@ -36,7 +36,7 @@ def driver(browser_driver):  # The fixture approach is more recommended.
 def shared_phone():
     registered_accounts = read_registered_accounts(1)
     if registered_accounts:
-        phone, pwd = registered_accounts
+        phone, pwd, _ = registered_accounts
         return phone, pwd
 
     pytest.fail("There are no registered accounts available to test the sending of messages")
@@ -58,7 +58,7 @@ def shared_state():
 def test_send_text_msgs(send_msg_page, shared_phone, login, shared_state):
     test_login = read_registered_accounts(0)
     if test_login:
-        phone, pwd = test_login
+        phone, pwd, _ = test_login
         login(phone, pwd)
         strange_phone, strange_password = shared_phone
         msgs = ['Hello! This is the first message。', 'This is the second test message。', 'The last message！']
@@ -89,7 +89,7 @@ def test_receive_message(driver, login, send_msg_page, shared_phone, shared_stat
 
     send_phone = read_registered_accounts(0)
     if send_phone:
-        phone, pwd = send_phone
+        phone, pwd, _ = send_phone
         send_msg_page.navigate_to_add_friend(phone)
         time.sleep(3)
         received_msgs = send_msg_page.check_received_messages()

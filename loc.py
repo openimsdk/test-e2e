@@ -1,3 +1,5 @@
+import random
+
 from selenium.webdriver.common.by import By
 
 
@@ -88,3 +90,7 @@ class Locators:
 
     # agree
     agree = (By.CSS_SELECTOR, 'button.ant-btn.css-1f72xif.ant-btn-primary.ant-btn-sm')
+    # reject
+    reject = (By.CSS_SELECTOR, 'button.ant-btn.css-1f72xif.ant-btn-default')
+    # nickname
+    friend_name = (By.CSS_SELECTOR, 'p.text-sm')

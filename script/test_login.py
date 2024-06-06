@@ -38,7 +38,7 @@ def test_loginss(driver):
     login_page.go_to() # Access the login page using the `go_to` method from the `LoginPage` class.
     # Select one account from the registered accounts for adding a friend operation.
     if registered_accounts:
-        username, pwd = registered_accounts
+        username, pwd, _ = registered_accounts
         print('phone：', username, pwd)
         login_page.login(username, pwd)
         time.sleep(10)

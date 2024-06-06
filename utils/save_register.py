@@ -18,7 +18,7 @@ def clear_all_files(target_dir):
                 print(f'Failed to delete {filename}: {e}')
 
 
-def save_registered_account(phoneNumber,password,dir_path='accounts'):
+def save_registered_account(phoneNumber, password, nickname, dir_path='accounts'):
     """
        Save the successfully registered account information to a CSV file.
        """
@@ -32,19 +32,19 @@ def save_registered_account(phoneNumber,password,dir_path='accounts'):
     # clear_all_files(target_dir)
 
     filename = f"registered_accounts_{datetime.today().strftime('%Y%m%d')}.csv"
-    fieldnames = ["phone_number", "password"]
+    fieldnames = ["phone_number", "password", "nickname"]
     file_path = os.path.join(target_dir, filename)
 
     mode = 'w' if not os.path.exists(file_path) else 'a'
     with open(file_path, mode='a', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=["phone_number", "password"])
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
 
         if mode == 'w':  # Only write header if file is being created
             writer.writeheader()
-        writer.writerow({"phone_number": phoneNumber, "password": password})
+        writer.writerow({"phone_number": phoneNumber, "password": password, "nickname": nickname})
 
     print(f"account {phoneNumber} Account creation successful")
 
 if __name__ == '__main__':
 
-    print('test',save_registered_account(15755551115,111111))
+    print('test',save_registered_account(15755551115,111111,'TestNick12'))
