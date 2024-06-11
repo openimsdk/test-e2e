@@ -47,9 +47,22 @@ jobs:
           docker compose up -d
           sleep 60
 
-      - name: Run tests with Xvfb
+      - name: Run tests with Xvfb and generate Allure results
         run: |
           cd ${{ github.workspace }}/main-repo
-          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script
+          xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script --alluredir=./reports/allure-results
+
+      - name: Upload Allure results to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: ${{ github.workspace }}/main-repo/reports/allure-results
+
+      # Optional: Serve Allure report
+      - name: Serve Allure report
+        uses: simple-elf/allure-report-action@v1.0.1
+        with:
+          results_directory: ${{ github.workspace }}/main-repo/reports/allure-results
+          allure_version: '2.13.9'  # Specify Allure version if needed
 
 
