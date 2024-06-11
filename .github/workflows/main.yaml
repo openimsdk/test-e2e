@@ -60,7 +60,7 @@ jobs:
 
       # Optional: Serve Allure report
       - name: Serve Allure report
-        uses: simple-elf/allure-report-action@v1.0.1
+        uses: simple-elf/allure-report-action@v1.9
         with:
           results_directory: ${{ github.workspace }}/main-repo/reports/allure-results
           allure_version: '2.13.9'  # Specify Allure version if needed
