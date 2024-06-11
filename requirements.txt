@@ -3,3 +3,4 @@ PyYAML
 pytest
 webdriver_manager
 pytest-ordering
+allure-pytest
