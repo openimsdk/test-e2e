@@ -50,6 +50,18 @@ To run all test cases in the suite:
    pytest -v -s ./script  
    ```
 
+## Running Allure-report
+
+To run all test cases in the suite:
+1. Open your Git testing environment.
+2. Execute the following command:
+   ```
+   pytest --alluredir=./reports/allure-results 
+   ```
+   ```
+   allure serve ./reports/allure-results   
+   ```
+
 
 #### 4. Install OpenIM Server Test
 
@@ -59,10 +71,12 @@ git clone https://github.com/openimsdk/openim-docker
 cd openim-docker
 ```
 
-init config:
+edit env:
 ```
-make init
+MINIO_EXTERNAL_ADDRESS="http://external_ip:10005"
+GRAFANA_URL="http://external_ip:13000/"
 ```
+
 
 start docker:
 ```
@@ -73,7 +87,7 @@ start test-e2e:
 ```
 cd ..
 cd test-e2e
-pytest main.py
+pytest -v -s ./script  
 ```
 
 ### Using the Headless Browser in Code
