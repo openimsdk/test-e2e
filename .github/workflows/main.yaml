@@ -51,18 +51,36 @@ jobs:
         run: |
           cd ${{ github.workspace }}/main-repo
           xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pytest -v -s ./script --alluredir=./reports/allure-results
+        env:
+          LANG: zh_CN.UTF-8
 
       - name: Upload Allure results to Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: ${{ github.workspace }}/main-repo/reports/allure-results
+
+      - name: Checkout gh-pages for report history
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
 
       # Optional: Serve Allure report
       - name: Serve Allure report
         uses: simple-elf/allure-report-action@v1.9
         with:
-          results_directory: ${{ github.workspace }}/main-repo/reports/allure-results
-          allure_version: '2.13.9'  # Specify Allure version if needed
+          allure_results: main-repo/reports/allure-results
+          gh_pages: gh-pages
+          allure_report: main-repo/reports/allure-report
+          allure_history: gh-pages/allure-history
+        env:
+          LANG: zh_CN.UTF-8
 
+      - name: Deploy report to Github Pages
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: gh-pages/allure-history
 
