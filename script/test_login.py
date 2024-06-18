@@ -2,7 +2,7 @@ import os
 import sys
 from config import DIR_PATH, HOST
 
-#登录测试脚本 (scripts/test_login.py)
+#Login test script (scripts/test_login.py)
 import time
 import yaml
 from selenium import webdriver

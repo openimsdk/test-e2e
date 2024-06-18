@@ -1,21 +1,21 @@
 register_tests:
 
-- description: "注册成功"
+- description: "registration success"
   generate_phone: True
   verification_code: "666666"
-  expected: "注册成功"
+  expected: "registration success"
 
-- description: "注册成功"
+- description: "registration success"
   generate_phone: True
   verification_code: "666666"
-  expected: "注册成功"
+  expected: "registration success"
 
-- description: "注册失败"
+- description: "registration failed"
   generate_phone: False
-  expected: "手机号已注册"
+  expected: "Mobile phone number has been registered"
 
-- description: "注册失败,验证码错误"
+- description: "registration failed,Verification code error"
   generate_phone: True
   verification_code: "123456"
-  expected: "验证码错误"
+  expected: "Verification code error"
 

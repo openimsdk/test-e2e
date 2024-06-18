@@ -42,13 +42,13 @@ def test_add_friends(driver, login):
     add_friend_page.go_to()
 
     registered_accounts = read_registered_accounts(1)
-    print("注册 账号:", registered_accounts)
+    print("Register an account:", registered_accounts)
 
     if registered_accounts:
         friend_phone, friend_pwd, _ = registered_accounts
-        add_friend_page.add_friend(friend_phone, "你好，加个好友把！")
+        add_friend_page.add_friend(friend_phone, "Hello, add me as a friend!")
     else:
-        assert False, "没有可用的注册账号来进行添加好友的测试"
+        assert False, "There is no available registered account to test adding friends"
     #
     # driver.execute_script("window.open('');")
     # driver.switch_to.window(driver.window_handles[1])
@@ -72,8 +72,8 @@ def test_agree_friends(driver, login):
         )
 
         text = element.text
-        print('验证是否成功同意：', text)
-        assert text == "已同意", "断言失败：文本内容不是 '已同意'"
+        print('Verify successful consent：', text)
+        assert text == "Agreed", "Assertion failed: The text content is not 'Agreed'"
     else:
-        assert False, "没有可用的注册账号来进行同意好友申请的测试"
+        assert False, "There is no available registered account to test the friend request approval"
 

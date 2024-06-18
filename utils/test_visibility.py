@@ -9,13 +9,13 @@ class test_visibility_of_element_located:
 
     def __call__(self, driver):
         try:
-            # 等待元素出现，并返回True表示成功找到元素 使用text_to_be_present_in_element
-            # 这种方法是专门用来检查元素中是否包含了预期的文本
+            # Wait for the element to appear and return True to indicate that the element was successfully found. Use text_to_be_present_in_element
+            # This method is specifically used to check whether the element contains the expected text
             element_text = WebDriverWait(driver,10).until(EC.text_to_be_present_in_element(self.loc,self.text))
-            print('弹窗文字已经找到：', element_text)
+            print('Pop-up text has been found：', element_text)
             return element_text
         except TimeoutException:
-            # 如果超时还没找到含有文本的元素，则返回False
-            print('没有找到弹窗中预期的文字')
+            # If the timeout period fails to find an element containing text, False is returned.
+            print('The expected text in the pop-up window was not found')
             return False
 

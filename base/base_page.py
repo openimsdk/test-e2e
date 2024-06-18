@@ -1,4 +1,4 @@
-#存放所有页面的公共方法
+#Store common methods for all pages
 import os
 import time
 
@@ -15,38 +15,38 @@ from utils.test_invisibility import test_invisibility_of_element_located
 # wd = webdriver.Chrome()
 # wd.get(HOST)
 class BasePage:
-    # 初始化方法
+    # Initialization method
     def __init__(self,driver):
         self.driver = driver
-        #这样不用每次都要船建一个WebDriverWait实例而是直接用wait
+        #This way,you don't have to create a new WebDriverWait instance each time,but can directly use wait
         self.wait = WebDriverWait(driver,10,0.5)
 
-    # 查找元素方法         # 假设 loc 参数为 ("id", "myElement")，那么 *loc 将被解包为 "id" 和 "myElement"，然后传递给 find_element 方法进行元素查找。
+    # Find Element Method Assuming the loc parameter is ("id", "myElement"), then *loc will be unpacked into "id" and "myElement", and then passed to the find_element method for element lookup.
     def base_find(self,loc):
-        # 使用expected_conditions的visibility_of_element_located方法等待元素可见
+        # Use the expected_conditions visibility_of_element_located method to wait for the element to be visible
         return  self.wait.until(EC.visibility_of_element_located(loc))
 
-    # 点击方法
+   
     def base_click(self, loc):
-        # 等待元素可点击并点击
+        # Wait for the element to be clickable and clickable
         self.wait.until(EC.element_to_be_clickable(loc)).click()
 
-    # 输入方法
+    # input
     def enter_text(self,loc,value):
-        # 获取元素(找到这个元素)
+        # Get Element (Find this Element)
         el = self.wait.until(EC.visibility_of_element_located(loc))
-        # 清空操作
+
         el.clear()
-        # 输入内容
+
         el.send_keys(value)
 
-    # 获取文本值方法
+    # Get text value method
     def base_get_text(self,loc):
         els =   self.wait.until(EC.visibility_of_all_elements_located(loc))
         # return el.text
         return [element.text for element in els]
 
-    # 截图方法
+    # Screenshot method
     def base_get_img(self):
         img_path = os.path.join(DIR_PATH, "img", "{}.png".format(time.strftime("%Y%m%d%H%M%S")))
         self.driver.get_screenshot_as_file(img_path)
@@ -54,7 +54,7 @@ class BasePage:
     def is_visible(self, locator, timeout=10):
         return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
     def wait_for_element_invisible(self, loc, text):
-        """等待特定文本的元素不可见。"""
+        """Wait until element with specific text is not visible.。"""
         self.wait.until(
             test_invisibility_of_element_located(loc, text)
         )
@@ -64,18 +64,18 @@ class BasePage:
         try:
             self.wait.until(lambda  d:d.execute_script('return document.readyState') == 'complete')
             masks = [
-                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), '登录中...'),
-                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), '同步中...')
+                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), 'logging in...'),
+                ((By.XPATH, '//*[@id="root"]/div/div/div[1]/div/div'), 'synchronizing...')
             ]
             for loc,text in masks:
                 try:
-                        # 尝试找到元素并确认其不可见
+                        # # Try to find the element and confirm it is invisible
                         self.wait_for_element_invisible(loc, text)
-                        # print(f"{text} 遮罩消失了。")
+                        # print(f"{text} The mask disappeared。")
                 except TimeoutException:
-                        print(f"等待 {text} 遮罩消失超时。")
+                        print(f"wait {text} Mask disappear timeout。")
         except TimeoutException:
-                print("页面加载超时，尝试重新加载页面。")
+                print("Page load timed out, try reloading the page.")
                 self.reload_page_if_stuck()
 
     def javascript_click(self,locator):
@@ -85,5 +85,5 @@ class BasePage:
     def reload_page_if_stuck(self):
         current_url = self.driver.current_url
         self.driver.get(current_url)
-        print("页面重新加载尝试解决问题。")
-        self.wait_masks_invisible()  # 再次等待遮罩消失
+        print("Reload the page to try to resolve the issue。")
+        self.wait_masks_invisible()  # Wait again for the mask to disappear

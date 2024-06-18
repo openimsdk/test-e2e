@@ -24,18 +24,18 @@ class SendMsgPage(BasePage):
         chat_window = self.driver.find_element(By.ID, 'chat-list')
         self.driver.execute_script("arguments[0].scrollTop = 0;", chat_window)
         time.sleep(3)
-        print('页面已经滚动到了顶部')
+        # print('The page has scrolled to the top')
 
     def scroll_to_bottom(self):
         chat_window = self.driver.find_element(By.ID, 'chat-list')
         self.driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", chat_window)
-        print('页面已经滚动到了底部')
+        # print('The page has scrolled to the bottom')
         time.sleep(2)
 
     def scroll_to_element(self, element):
         # chat_window = self.driver.find_element(By.CSS_SELECTOR, 'div.chat-window-selector')  # 更新选择器为聊天窗口的实际选择器
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        print('页面已经滚动到了', element, '元素的位置上', element.text)
+        print('The page has scrolled to', element, 'The position of the element', element.text)
         time.sleep(1)
 
     def navigate_to_add_friend(self, strange_phone):
@@ -66,7 +66,7 @@ class SendMsgPage(BasePage):
             # all_msgs += messages + " "  # Assuming messages are separated by spaces
             time.sleep(1)  # A brief pause to ensure message sending
         self.scroll_to_bottom()
-        # print('发送3条消息后滚到底部以便发送图片等')
+        # print('After sending 3 messages, scroll to the bottom to send pictures, etc.')
 
     def upload_file(self, file_path, file_type):
         locator = Locators.file_type_to_loc[file_type]
@@ -77,7 +77,7 @@ class SendMsgPage(BasePage):
         try:
             file_input = self.driver.find_element(*locator)
             file_input.send_keys(file_path)  # Use "send_keys" to upload files
-            print(f"尝试上传文件: {file_path}")
+            print(f"Try uploading a file: {file_path}")
             time.sleep(3)
 
             upload_success_indicator = Locators.file_sent_success_loc[file_type]
@@ -108,15 +108,15 @@ class SendMsgPage(BasePage):
 
         for element in message_elements:
             self.scroll_to_element(element)
-            # print('捕捉到滚动到消息元素：', element.text)
+            # print('Capture scrolling to message element：', element.text)
             messages_texts.append(element.text)
 
         message_text = ' '.join(messages_texts)
-        # print('检查验证消息有：', message_text)
+        # print('Check the verification message：', message_text)
         # Check if each message appears in the chat history
 
         all_messages_present = all(message in message_text for message in msg)
-        print('所有消息-------:', all_messages_present)
+        print('all msg-------:', all_messages_present)
 
         return all_messages_present
 
@@ -137,7 +137,7 @@ class SendMsgPage(BasePage):
         for element in message_element:
             self.scroll_to_element(element)
             messages.append(element.text)
-        print('接收的内容有：', messages)
+        print('The content received is：', messages)
         return messages
 
     def check_received_files(self, file_type):
@@ -148,43 +148,43 @@ class SendMsgPage(BasePage):
             elements = self.base_find(locator)
             WebDriverWait(self.driver, 10).until(
                 lambda driver: driver.execute_script('return document.readyState') == 'complete')
-            print('查看接收类型：', file_type)
-            print('等待元素可见看看是什么：', elements)
+            print('View Receiving Type：', file_type)
+            # print('Wait for the element to be visible to see what it is：', elements)
             self.scroll_to_element(elements)
-            print('页面已完全加载且滚动到该元素上')
+            # print('The page is fully loaded and scrolled to the element')
             if file_type == 'image' or file_type == 'video':
                 is_valid = self.driver.execute_script(
                     "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
                     elements)
                 if not is_valid:
-                    raise ValueError(f"{file_type.capitalize()}未正确加载。")
-                print(f'接收到的{file_type.capitalize()}文件: {elements.get_attribute("src")}')
+                    raise ValueError(f"{file_type.capitalize()}Not loaded correctly。")
+                print(f'Received{file_type.capitalize()}file: {elements.get_attribute("src")}')
             if file_type == 'video':
                 play_button = self.base_find(Locators.video_svg)
                 if not play_button:
-                    raise ValueError("视频播放按钮未找到。")
-                print("播放按钮存在，确认是视频文件。")
+                    raise ValueError("Video play button not found。")
+                print("The play button exists, confirming that it is a video file。")
             elif file_type == 'file':
                 if not elements.is_displayed() or "OpenIM.pdf" not in elements.text:
-                    raise ValueError("文件未正确显示或文件名不匹配。")
-                print(f'接收到的普通文件: {elements.text}')
+                    raise ValueError("The file is not displayed correctly or the file name does not match。")
+                print(f'Received normal files: {elements.text}')
             return True
 
         except TimeoutException:
             self.driver.save_screenshot(f'file_receiving_failed_{file_type}.png')
-            print(f"超时：在检查接收到的文件类型时遇到 TimeoutException: {file_type}")
-            print(f"当前URL: {self.driver.current_url}")
+            print(f"Timeout: Encountered while checking received file type TimeoutException: {file_type}")
+            print(f"Current URL: {self.driver.current_url}")
             return False
 
         except StaleElementReferenceException:
             self.driver.save_screenshot(f'file_stale_element_error_{file_type}.png')
             print(
-                f"StaleElementReferenceException：在检查接收到的文件类型时遇到 StaleElementReferenceException: {file_type}")
+                f"StaleElementReferenceException：When checking the received file type, StaleElementReferenceException: {file_type}")
             return False
 
         except Exception as e:  # Catch other anomalies more broadly
             self.driver.save_screenshot(f'file_invalid_{file_type}.png')
-            print(f"无效元素：{e}")
+            print(f"Invalid elements：{e}")
             return False
 
 

@@ -46,14 +46,14 @@ class AddFriendPage(BasePage):
 
         # Pop-up window adds successful and failed element positioning
         msg_loc = (By.CSS_SELECTOR,'.ant-message-custom-content.ant-message-success > span:nth-child(2)')
-        message_check = test_visibility_of_element_located(msg_loc,'发送好友请求成功！')
+        message_check = test_visibility_of_element_located(msg_loc,'Friend request sent successfully！')
         if message_check(self.driver):
-            print("发送好友请求成功。")
+            print("Friend request sent successfully。")
         else:
             # Here we need to check the failure situation
-            message_fail_check = test_visibility_of_element_located(msg_loc, "发送请求失败！")
+            message_fail_check = test_visibility_of_element_located(msg_loc, "Failed to send request！")
             if message_fail_check(self.driver):
-                print("发送好友请求失败。")
+                print("Failed to send friend request。")
             else:
                 # If it is neither a success nor a failure message, an unknown result is printed
                 # You need to get the message text for printing
@@ -62,9 +62,9 @@ class AddFriendPage(BasePage):
                         EC.visibility_of_element_located(msg_loc)
                     )
                     message_text = message_element.text
-                    print("未知的结果，弹窗文本为：", message_text)
+                    print("Unknown result, the pop-up text is:", message_text)
                 except TimeoutException:
-                    print("没有找到预期的反馈消息。")
+                    print("The expected feedback message was not found。")
 
 
     def agree_friend(self,addfriend_nickname):
@@ -73,11 +73,11 @@ class AddFriendPage(BasePage):
         self.base_click(Locators.contacts)
         self.base_click(Locators.newFriend_list)
         friend_names = self.base_get_text(Locators.friend_name)
-        print('检测申请列表的好友有：', friend_names)
+        print('Friends in the detection application list include：', friend_names)
         if addfriend_nickname in friend_names:
-            print(f"已收到该{addfriend_nickname}好友的申请。")
+            print(f"Received this{addfriend_nickname}Friend's Request。")
         else:
-            print(f"{addfriend_nickname}申请不存在。")
+            print(f"{addfriend_nickname}Application does not exist。")
         self.base_click(Locators.agree)
         time.sleep(2)
 

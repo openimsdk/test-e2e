@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 
 def create_driver():
         options = Options()
-        options.add_argument('window-size=1920x1080')  # 设置窗口大小匹配Xvfb
+        options.add_argument('window-size=1920x1080')  # Set the window size to match Xvfb
         options.page_load_strategy = 'eager'
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
