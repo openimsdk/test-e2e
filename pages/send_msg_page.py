@@ -157,7 +157,7 @@ class SendMsgPage(BasePage):
                     "return arguments[0].complete && typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
                     elements)
                 if not is_valid:
-                    raise ValueError(f"{file_type.capitalize()}Not loaded correctly。")
+                    raise ValueError(f"{file_type.capitalize()} Not loaded correctly。")
                 print(f'Received{file_type.capitalize()}file: {elements.get_attribute("src")}')
             if file_type == 'video':
                 play_button = self.base_find(Locators.video_svg)

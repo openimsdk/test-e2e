@@ -10,11 +10,11 @@ register_tests:
   verification_code: "666666"
   expected: "registration success"
 
-- description: "registration failed"
+- description: "注册失败"
   generate_phone: False
   expected: "Mobile phone number has been registered"
 
-- description: "registration failed,Verification code error"
+- description: "注册失败,验证码错误"
   generate_phone: True
   verification_code: "123456"
   expected: "Verification code error"

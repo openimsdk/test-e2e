@@ -53,7 +53,7 @@ class RegisterPage(BasePage):
             error_message_element = self.wait.until(EC.visibility_of_element_located(error_message_locator))
             error_message_text = error_message_element.text
 
-            if "Mobile phone number has been registered" in error_message_text:
+            if "手机号已注册" in error_message_text:
                 print("Mobile phone number has been registered,Please change your number")
                 return "Mobile phone number has been registered"
 
@@ -76,7 +76,7 @@ class RegisterPage(BasePage):
             error_message_locator = (By.XPATH, '/html/body/div[2]/div/div/div/div/span[2]')
             error_message_element = self.wait.until(EC.visibility_of_element_located(error_message_locator))
             error_message_text = error_message_element.text
-            if "Verification code error" in error_message_text:
+            if "验证码错误" in error_message_text:
                 return "Verification code error"
         except TimeoutException:
             pass
