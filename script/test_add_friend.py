@@ -46,7 +46,7 @@ def test_add_friends(driver, login):
 
     if registered_accounts:
         friend_phone, friend_pwd, _ = registered_accounts
-        add_friend_page.add_friend(friend_phone, "Hello, add me as a friend!")
+        add_friend_page.add_friend(friend_phone, "你好，加个好友把！")
     else:
         assert False, "There is no available registered account to test adding friends"
     #
@@ -73,7 +73,7 @@ def test_agree_friends(driver, login):
 
         text = element.text
         print('Verify successful consent：', text)
-        assert text == "Agreed", "Assertion failed: The text content is not 'Agreed'"
+        assert text == "已同意", "Assertion failed: The text content is not '已同意'"
     else:
         assert False, "There is no available registered account to test the friend request approval"
 
