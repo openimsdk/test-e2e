@@ -46,12 +46,12 @@ class AddFriendPage(BasePage):
 
         # Pop-up window adds successful and failed element positioning
         msg_loc = (By.CSS_SELECTOR,'.ant-message-custom-content.ant-message-success > span:nth-child(2)')
-        message_check = test_visibility_of_element_located(msg_loc,'Friend request sent successfully！')
+        message_check = test_visibility_of_element_located(msg_loc,'发送好友请求成功！')
         if message_check(self.driver):
             print("Friend request sent successfully。")
         else:
             # Here we need to check the failure situation
-            message_fail_check = test_visibility_of_element_located(msg_loc, "Failed to send request！")
+            message_fail_check = test_visibility_of_element_located(msg_loc, "发送请求失败！")
             if message_fail_check(self.driver):
                 print("Failed to send friend request。")
             else:
@@ -73,7 +73,7 @@ class AddFriendPage(BasePage):
         self.base_click(Locators.contacts)
         self.base_click(Locators.newFriend_list)
         friend_names = self.base_get_text(Locators.friend_name)
-        print('Friends in the detection application list include：', friend_names)
+        # print('检测申请列表的好友有：', friend_names)
         if addfriend_nickname in friend_names:
             print(f"Received this{addfriend_nickname}Friend's Request。")
         else:
