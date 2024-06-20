@@ -94,3 +94,16 @@ class Locators:
     reject = (By.CSS_SELECTOR, 'button.ant-btn.css-1f72xif.ant-btn-default')
     # nickname
     friend_name = (By.CSS_SELECTOR, 'p.text-sm')
+    session_friendList_loc = (By.CSS_SELECTOR, "div[data-test-id='virtuoso-scroller'] "
+                                               ".ant-avatar-square:not(.ant-avatar-image) > span.ant-avatar-string")
+    Specify_friend_loc = (By.CSS_SELECTOR, " div[data-test-id='virtuoso-scroller'] .div.flex-1.truncate.font-medium")
+
+    # del_vator_loc=(By.CSS_SELECTOR,'div.flex.h-full.items-center.leading-none span.ant-avatar.ant-avatar-square')
+    setting_loc = (By.CSS_SELECTOR, 'img.ml-5.cursor-pointer:nth-of-type(3)')
+
+    del_loc = (By.CSS_SELECTOR,'button.ant-btn.ant-btn-primary.ant-btn-dangerous')
+
+    del_confirm_loc = (By.XPATH,"//button[contains(., '确定')]")
+
+    # del_not_loc = (By.XPATH,"//button[contains(., '取消')]")
+    two_avtor_loc = (By.XPATH,'//*[@id="chat-container"]/div[2]/div[3]/div/div[2]/div[1]')

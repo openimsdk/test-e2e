@@ -29,7 +29,7 @@ class AddFriendPage(BasePage):
 
     def add_friend(self,friend_phone,greeting_message='Hello'):
         self.wait_masks_invisible()
-        time.sleep(2)
+        time.sleep(4)
         self.javascript_click(Locators.add_menu_loc)
 
         self.base_click(Locators.add_friend_loc)
@@ -62,7 +62,7 @@ class AddFriendPage(BasePage):
                         EC.visibility_of_element_located(msg_loc)
                     )
                     message_text = message_element.text
-                    print("Unknown result, the pop-up text is:", message_text)
+                    print("Unknown result, the pop-up text is:：", message_text)
                 except TimeoutException:
                     print("The expected feedback message was not found。")
 
@@ -73,7 +73,7 @@ class AddFriendPage(BasePage):
         self.base_click(Locators.contacts)
         self.base_click(Locators.newFriend_list)
         friend_names = self.base_get_text(Locators.friend_name)
-        # print('检测申请列表的好友有：', friend_names)
+        print('friend list：', friend_names)
         if addfriend_nickname in friend_names:
             print(f"Received this{addfriend_nickname}Friend's Request。")
         else:
